@@ -4,18 +4,18 @@ import com.example.backend.dtos.ClientRegisterDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
 import com.example.backend.repositories.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
-public class ClientServices {
-    private final ClientRepository clientRepository;
-
-    public ClientServices(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
+public class ClientService {
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<ClientEntity> getClients() {
         return clientRepository.findAll();
@@ -41,7 +41,7 @@ public class ClientServices {
                 .name(clientDTO.getName())
                 .address(clientDTO.getAddress())
                 .email(clientDTO.getEmail())
-                .password(clientDTO.getPassword())
+                .password(passwordEncoder.encode(clientDTO.getPassword()))
                 .phone(clientDTO.getPhone())
                 .build();
 
