@@ -1,6 +1,7 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.Client;
+import com.example.backend.dtos.ClientRegisterDTO;
+import com.example.backend.entities.ClientEntity;
 import com.example.backend.services.ClientServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +20,22 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> getUsers() {
-        List<Client> clients = clientServices.getClients();
-
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+    public ResponseEntity<List<ClientEntity>> getUsers() {
+        return new ResponseEntity<>(clientServices.getClients(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(clientServices.getClient(id), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ClientEntity> getUser(@PathVariable long id) {
+        return new ResponseEntity<>(clientServices.getClient(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> postUser(@RequestBody Client client) {
-        try {
-            return new ResponseEntity<>(clientServices.postClient(client), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<ClientEntity> register(@RequestBody ClientRegisterDTO clientDTO) {
+        return new ResponseEntity<>(clientServices.register(clientDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putUser(@PathVariable long id, @RequestBody Client client) {
-        try {
-            return new ResponseEntity<>(clientServices.putClient(id, client), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<ClientEntity> putUser(@PathVariable long id, @RequestBody ClientEntity clientEntity) {
+        return new ResponseEntity<>(clientServices.putClient(id, clientEntity), HttpStatus.OK);
     }
 }

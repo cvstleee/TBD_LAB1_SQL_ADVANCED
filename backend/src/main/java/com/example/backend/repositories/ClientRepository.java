@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.Client;
+import com.example.backend.entities.ClientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -17,72 +17,72 @@ public class ClientRepository {
         this.sql2o = sql2o;
     }
 
-    public List<Client> findAll() {
+    public List<ClientEntity> findAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM clients")
-                    .executeAndFetch(Client.class);
+                    .executeAndFetch(ClientEntity.class);
         }
     }
 
-    public Client findById(long id) {
+    public ClientEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM clients WHERE id = :id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(Client.class);
+                    .executeAndFetchFirst(ClientEntity.class);
         }
     }
 
-    public Client findByEmail(String email) {
+    public ClientEntity findByEmail(String email) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM clients WHERE email = :email")
                     .addParameter("email", email)
-                    .executeAndFetchFirst((Client.class));
+                    .executeAndFetchFirst((ClientEntity.class));
         }
     }
 
-    public Client findByPhone(String phone) {
+    public ClientEntity findByPhone(String phone) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM clients WHERE phone = :phone")
                     .addParameter("phone", phone)
-                    .executeAndFetchFirst(Client.class);
+                    .executeAndFetchFirst(ClientEntity.class);
         }
     }
 
-    public Client save(Client client) {
+    public ClientEntity save(ClientEntity clientEntity) {
         String query = "INSERT INTO clients (name, address, email, password, phone) " +
                 "VALUES (:name, :address, :email, :password, :phone) RETURNING id";
 
         try (Connection con = sql2o.open()) {
             int id = con.createQuery(query, true)
-                    .addParameter("name", client.getName())
-                    .addParameter("address", client.getAddress())
-                    .addParameter("email", client.getEmail())
-                    .addParameter("password", client.getPassword())
-                    .addParameter("phone", client.getPhone())
+                    .addParameter("name", clientEntity.getName())
+                    .addParameter("address", clientEntity.getAddress())
+                    .addParameter("email", clientEntity.getEmail())
+                    .addParameter("password", clientEntity.getPassword())
+                    .addParameter("phone", clientEntity.getPhone())
                     .executeUpdate()
                     .getKey(Integer.class);
 
-            client.setId(id);
-            return client;
+            clientEntity.setId(id);
+            return clientEntity;
         }
     }
 
-    public Client update(long id, Client client) {
+    public ClientEntity update(long id, ClientEntity clientEntity) {
         String query = "UPDATE clients " +
                 "SET email = :email " +
                 "WHERE id = :id";
 
         try (Connection con = sql2o.open()) {
             con.createQuery(query)
-                    .addParameter("email", client.getEmail())
+                    .addParameter("email", clientEntity.getEmail())
                     .addParameter("id", id)
                     .executeUpdate();
 
-            Client updatedClient = con.createQuery("SELECT * FROM clients WHERE id = :id")
-                    .addParameter("id", client.getId())
-                    .executeAndFetchFirst(Client.class);
+            ClientEntity updatedClientEntity = con.createQuery("SELECT * FROM clients WHERE id = :id")
+                    .addParameter("id", clientEntity.getId())
+                    .executeAndFetchFirst(ClientEntity.class);
 
-            return updatedClient;
+            return updatedClientEntity;
         }
     }
 }
