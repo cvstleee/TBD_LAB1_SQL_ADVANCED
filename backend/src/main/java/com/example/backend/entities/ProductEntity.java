@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class ProductEntity {
     private long id;
     private String name;
-    private String address;
-    private String email;
-    private String password;
-    private String phone;
+    private String description;
+    private double price;
+    private int stock;
+    private String state;
+    private long category_id;
 }
