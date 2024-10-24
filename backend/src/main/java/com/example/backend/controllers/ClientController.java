@@ -1,6 +1,5 @@
 package com.example.backend.controllers;
 
-import com.example.backend.dtos.ClientRegisterDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,6 @@ public class ClientController {
     @GetMapping("/{id}")
     public ResponseEntity<ClientEntity> getUser(@PathVariable long id) {
         return new ResponseEntity<>(clientService.getClient(id), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<ClientEntity> register(@RequestBody ClientRegisterDTO clientDTO) {
-        return new ResponseEntity<>(clientService.register(clientDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
