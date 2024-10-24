@@ -1,6 +1,5 @@
 package com.example.backend.services;
 
-import com.example.backend.dtos.ClientRegisterDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
 import com.example.backend.repositories.ClientRepository;
@@ -29,23 +28,6 @@ public class ClientService {
         }
 
         return clientEntity;
-    }
-
-    public ClientEntity register(ClientRegisterDTO clientDTO) {
-        ClientEntity existingClientEntityByEmail = clientRepository.findByEmail(clientDTO.getEmail());
-        if (existingClientEntityByEmail != null) {
-            throw new IllegalStateException("The email is already used");
-        }
-
-        ClientEntity client = ClientEntity.builder()
-                .name(clientDTO.getName())
-                .address(clientDTO.getAddress())
-                .email(clientDTO.getEmail())
-                .password(passwordEncoder.encode(clientDTO.getPassword()))
-                .phone(clientDTO.getPhone())
-                .build();
-
-        return clientRepository.save(client);
     }
 
     public ClientEntity putClient(long id, ClientEntity clientEntity) {
