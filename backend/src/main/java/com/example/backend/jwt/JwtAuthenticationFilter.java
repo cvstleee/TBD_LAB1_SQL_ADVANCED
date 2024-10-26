@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,22 +19,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            try {
-                String token = header.replace("Bearer ", "");
-                DecodedJWT decodedJWT = JwtUtil.verifyToken(token);
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JWT")) {
+                    try {
+                        String token = cookie.getValue();
+                        DecodedJWT decodedJWT = JwtUtil.verifyToken(token);
 
-                String email = decodedJWT.getSubject();
+                        String email = decodedJWT.getSubject();
 
-                if (email != null) {
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+                        if (email != null) {
+                            UsernamePasswordAuthenticationToken authentication =
+                                    new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        }
+                    } catch (JWTVerificationException e) {
+                        System.out.println("Invalid JWT");
+                    }
                 }
-
-            } catch (JWTVerificationException e) {
-                System.out.println("Invalid JWT: " + e.getMessage());
             }
         }
         chain.doFilter(request, response);
