@@ -1,0 +1,16 @@
+package com.example.backend.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
+    private long id;
+    private String name;
+    private Timestamp deleted_at;
+}
