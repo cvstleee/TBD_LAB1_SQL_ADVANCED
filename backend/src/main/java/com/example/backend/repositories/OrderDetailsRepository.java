@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.OrderDetails;
+import com.example.backend.entities.OrderDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -18,22 +18,22 @@ public class OrderDetailsRepository {
         this.sql2o = sql2o;
     }
 
-    public List<OrderDetails> findAll() {
+    public List<OrderDetailsEntity> findAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM order_details")
-                    .executeAndFetch(OrderDetails.class);
+                    .executeAndFetch(OrderDetailsEntity.class);
         }
     }
 
-    public OrderDetails findById(long id) {
+    public OrderDetailsEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM order_details WHERE id =:id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(OrderDetails.class);
+                    .executeAndFetchFirst(OrderDetailsEntity.class);
         }
     }
 
-    public OrderDetails save(OrderDetails orderDetails) {
+    public OrderDetailsEntity save(OrderDetailsEntity orderDetails) {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO order_details (order_id, product_id, quantity, unit_price) " +
                     "VALUES (:order_id, :product_id, :quantity, :unit_price) RETURNING id";
@@ -49,7 +49,7 @@ public class OrderDetailsRepository {
         }
     }
 
-    public OrderDetails update(long id, OrderDetails orderDetails) {
+    public OrderDetailsEntity update(long id, OrderDetailsEntity orderDetails) {
         try (Connection con = sql2o.open()) {
             String query = "UPDATE order_details " +
                     "SET quantity =:quantity " +
@@ -59,9 +59,9 @@ public class OrderDetailsRepository {
                     .addParameter("id", id)
                     .executeUpdate();
 
-            OrderDetails updatedOrderDetails = con.createQuery("SELECT * FROM order_details WHERE id =:id")
+            OrderDetailsEntity updatedOrderDetails = con.createQuery("SELECT * FROM order_details WHERE id =:id")
                     .addParameter("id", orderDetails.getId())
-                    .executeAndFetchFirst(OrderDetails.class);
+                    .executeAndFetchFirst(OrderDetailsEntity.class);
             return updatedOrderDetails;
         }
     }

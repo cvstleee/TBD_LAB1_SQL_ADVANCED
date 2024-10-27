@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.Order;
+import com.example.backend.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -18,22 +18,22 @@ public class OrderRepository {
         this.sql2o = sql2o;
     }
 
-    public List<Order> findAll() {
+    public List<OrderEntity> findAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM orders")
-                    .executeAndFetch(Order.class);
+                    .executeAndFetch(OrderEntity.class);
         }
     }
 
-    public Order findById(long id) {
+    public OrderEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM orders WHERE id=:id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(Order.class);
+                    .executeAndFetchFirst(OrderEntity.class);
         }
     }
 
-    public Order save(Order order) {
+    public OrderEntity save(OrderEntity order) {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO orders (order_date, state, client_id, total) " +
             "VALUES (:order_date, :state, :client_id, :total) RETURNING id";
@@ -49,7 +49,7 @@ public class OrderRepository {
         }
     }
 
-    public Order update(long id, Order order) {
+    public OrderEntity update(long id, OrderEntity order) {
         try (Connection con = sql2o.open()) {
             String query = "UPDATE orders " +
                     "SET state = :state " +
@@ -58,9 +58,9 @@ public class OrderRepository {
                     .addParameter("state", order.getState())
                     .addParameter("id", id)
                     .executeUpdate();
-            Order updatedOrder = con.createQuery("SELECT * FROM orders WHERE id =:id")
+            OrderEntity updatedOrder = con.createQuery("SELECT * FROM orders WHERE id =:id")
                     .addParameter("id", order.getId())
-                    .executeAndFetchFirst(Order.class);
+                    .executeAndFetchFirst(OrderEntity.class);
             return updatedOrder;
         }
     }

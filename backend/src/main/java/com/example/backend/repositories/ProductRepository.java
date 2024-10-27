@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.Product;
+import com.example.backend.entities.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -18,22 +18,22 @@ public class ProductRepository {
         this.sql2o = sql2o;
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM products")
-                    .executeAndFetch(Product.class);
+                    .executeAndFetch(ProductEntity.class);
         }
     }
 
-    public Product findById(long id) {
+    public ProductEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM products WHERE id=:id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(Product.class);
+                    .executeAndFetchFirst(ProductEntity.class);
         }
     }
 
-    public Product save(Product product) {
+    public ProductEntity save(ProductEntity product) {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO products (name, description, price, stock, state, category_id) " +
                     "VALUES (:name, :description, :price, :stock, :state, :category_id) RETURNING id";
@@ -51,7 +51,7 @@ public class ProductRepository {
         }
     }
 
-    public Product update(long id, Product product) {
+    public ProductEntity update(long id, ProductEntity product) {
         try (Connection con = sql2o.open()) {
             String query = "UPDATE products " +
                     "SET stock =:stock " +
@@ -61,9 +61,9 @@ public class ProductRepository {
                     .addParameter("id", id)
                     .executeUpdate();
 
-            Product updatedProduct = con.createQuery("SELECT * FROM products WHERE id = :id")
+            ProductEntity updatedProduct = con.createQuery("SELECT * FROM products WHERE id = :id")
                     .addParameter("id", product.getId())
-                    .executeAndFetchFirst(Product.class);
+                    .executeAndFetchFirst(ProductEntity.class);
             return updatedProduct;
         }
 

@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.Category;
+import com.example.backend.entities.CategoryEntity;
 import com.example.backend.services.CategoryServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categorties = categoryServices.getAllCategories();
+    public ResponseEntity<List<CategoryEntity>> getAllCategories() {
+        List<CategoryEntity> categorties = categoryServices.getAllCategories();
         return new ResponseEntity<>(categorties, HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> postCategories(@RequestBody Category category) {
+    public ResponseEntity<?> postCategories(@RequestBody CategoryEntity category) {
         try {
             return new ResponseEntity<>(categoryServices.postCategorie(category), HttpStatus.CREATED);
         }
@@ -44,7 +44,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putCategories(@PathVariable long id, @RequestBody Category category) {
+    public ResponseEntity<?> putCategories(@PathVariable long id, @RequestBody CategoryEntity category) {
         try {
             return new ResponseEntity<>(categoryServices.putCategorie(id, category), HttpStatus.OK);
         } catch (Exception e) {

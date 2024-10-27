@@ -1,6 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.entities.Order;
+import com.example.backend.entities.OrderEntity;
 import com.example.backend.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,28 +18,28 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> getAllOrders() {
+    public List<OrderEntity> getAllOrders() {
         return orderRepository.findAll();
     }
 
-    public Order getOrderById(long id) {
-        Order order = orderRepository.findById(id);
+    public OrderEntity getOrderById(long id) {
+        OrderEntity order = orderRepository.findById(id);
         if (order == null) {
             throw new NoSuchElementException("Order not found");
         }
         return order;
     }
 
-    public Order postOrder(Order order) {
+    public OrderEntity postOrder(OrderEntity order) {
         return orderRepository.save(order);
     }
 
-    public Order updateOrder(long id, Order order) {
+    public OrderEntity updateOrder(long id, OrderEntity order) {
         return orderRepository.update(id, order);
     }
 
     public boolean softDeletedOrder(long id) {
-        Order order = getOrderById(id);
+        OrderEntity order = getOrderById(id);
         if (order == null) {
             throw new NoSuchElementException("Order not found");
         }

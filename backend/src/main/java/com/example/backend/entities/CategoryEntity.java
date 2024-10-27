@@ -7,15 +7,10 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+@AllArgsConstructor
+public class CategoryEntity {
     private long id;
     private String name;
-    private String description;
-    private double price;
-    private int stock;
-    private String state;
-    private long category_id;
     private Timestamp deleted_at;
 }

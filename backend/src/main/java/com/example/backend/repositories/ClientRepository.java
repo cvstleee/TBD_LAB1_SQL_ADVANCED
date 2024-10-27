@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -83,6 +84,19 @@ public class ClientRepository {
                     .executeAndFetchFirst(ClientEntity.class);
 
             return updatedClientEntity;
+        }
+    }
+
+    public boolean softDelete(long id) {
+        String query = "UPDATE clients SET deleted_at = :deleted_at WHERE id = :id AND deleted_at IS NULL";
+
+        try (Connection con = sql2o.open()) {
+            int rowsSoftDeleted = con.createQuery(query)
+                    .addParameter("deleted_at", LocalDateTime.now())
+                    .addParameter("id", id)
+                    .executeUpdate()
+                    .getResult();
+            return rowsSoftDeleted > 0;
         }
     }
 }

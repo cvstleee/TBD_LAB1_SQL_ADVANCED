@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.Order;
+import com.example.backend.entities.OrderEntity;
 import com.example.backend.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderEntity>> getAllOrders() {
+        List<OrderEntity> orders = orderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -33,7 +33,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postOrder(@RequestBody Order order) {
+    public ResponseEntity<?> postOrder(@RequestBody OrderEntity order) {
         try {
             return new ResponseEntity<>(orderService.postOrder(order), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putOrder(@PathVariable long id, @RequestBody Order order) {
+    public ResponseEntity<?> putOrder(@PathVariable long id, @RequestBody OrderEntity order) {
         try {
             return new ResponseEntity<>(orderService.updateOrder(id, order), HttpStatus.OK);
         } catch (Exception e) {
