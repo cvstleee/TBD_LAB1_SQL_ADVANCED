@@ -1,19 +1,32 @@
 <template>
-    <v-app>
-      <v-app-bar app color="#FF9800">
-        <v-toolbar-title>Presta Banco: Créditos Hipotecarios</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn to="/registerUser" text>Register Costumer</v-btn>
-        <v-btn icon @click="toggleDrawer(true)">
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-      </v-app-bar>
+  <VAppBar app color="#FF9800">
+    <VToolbarTitle>Presta Banco: Créditos Hipotecarios</VToolbarTitle>
+    <VSpacer></VSpacer>
+    <VBtn to="/registerUser" text>Register Customer</VBtn>
+    <VBtn icon @click="toggleDrawer(true)">
+      <VIcon>mdi-menu</VIcon>
+    </VBtn>
+  </VAppBar>
+</template>
 
-    </v-app>
-  </template>
-  
- 
-  
-  <style scoped>
-  /* Puedes agregar estilos personalizados aquí */
-  </style>
+<script setup>
+import { VAppBar, VToolbarTitle, VSpacer, VBtn, VIcon } from '../Utils/vuetifyComponents';
+</script>
+
+<style scoped>
+.navbar {
+  background-color: #333;
+  justify-content: flex-start;
+}
+
+.container-fluid {
+  padding-left: 0;
+}
+
+a {
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+}
+</style>

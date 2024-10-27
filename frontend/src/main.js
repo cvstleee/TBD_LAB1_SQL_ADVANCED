@@ -1,7 +1,6 @@
-import { createApp } from 'vue';
-import './style.css';
-import App from './App.vue';
-import vuetify from './plugins/vuetify'
+import { createApp } from "vue";
+import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
 
 // Crear la aplicación Vue
 const app = createApp(App);
@@ -10,4 +9,4 @@ const app = createApp(App);
 app.use(vuetify);
 
 // Montar la aplicación en el elemento con id "app"
-app.mount('#app');
+app.mount("#app");
