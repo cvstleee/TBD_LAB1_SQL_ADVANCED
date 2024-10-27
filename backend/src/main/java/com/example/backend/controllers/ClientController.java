@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/clients")
@@ -29,5 +31,13 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<ClientEntity> putUser(@PathVariable long id, @RequestBody ClientEntity clientEntity) {
         return new ResponseEntity<>(clientService.putClient(id, clientEntity), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable long id) {
+        boolean status = clientService.deleteClient(id);
+        HashMap<String, Boolean> response = new HashMap<>();
+        response.put("status", status);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

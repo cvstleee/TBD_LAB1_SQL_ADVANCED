@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.OrderDetails;
+import com.example.backend.entities.OrderDetailsEntity;
 import com.example.backend.services.OrderDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ public class OrderDetailsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDetails>> getAllOrderDetails() {
-        List<OrderDetails> ordersDetails = orderDetailsService.getOrderDetails();
+    public ResponseEntity<List<OrderDetailsEntity>> getAllOrderDetails() {
+        List<OrderDetailsEntity> ordersDetails = orderDetailsService.getOrderDetails();
         return new ResponseEntity<>(ordersDetails, HttpStatus.OK);
     }
 
@@ -33,7 +33,7 @@ public class OrderDetailsController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postOrderDetails(@RequestBody OrderDetails orderDetails) {
+    public ResponseEntity<?> postOrderDetails(@RequestBody OrderDetailsEntity orderDetails) {
         try {
             return new ResponseEntity<>(orderDetailsService.postOrderDetails(orderDetails), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class OrderDetailsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putOrderDetails(@PathVariable long id, @RequestBody OrderDetails orderDetails) {
+    public ResponseEntity<?> putOrderDetails(@PathVariable long id, @RequestBody OrderDetailsEntity orderDetails) {
         try {
             return new ResponseEntity<>(orderDetailsService.putOrderDetails(id, orderDetails), HttpStatus.OK);
         } catch (Exception e) {

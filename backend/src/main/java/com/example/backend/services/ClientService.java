@@ -38,4 +38,13 @@ public class ClientService {
 
         return clientRepository.update(id, clientEntity);
     }
+
+    public boolean deleteClient(long id) {
+        ClientEntity clientEntity = clientRepository.findById(id);
+        if (clientEntity == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+
+        return clientRepository.softDelete(id);
+    }
 }

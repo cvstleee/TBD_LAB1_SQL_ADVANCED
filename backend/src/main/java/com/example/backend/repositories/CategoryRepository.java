@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.Category;
+import com.example.backend.entities.CategoryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -19,23 +19,23 @@ public class CategoryRepository {
         this.sql2o = sql2o;
     }
 
-    public Category findById(long id) {
+    public CategoryEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             String sql = "SELECT * FROM categories WHERE id = :id";
             return con.createQuery(sql)
                     .addParameter("id", id)
-                    .executeAndFetchFirst(Category.class);
+                    .executeAndFetchFirst(CategoryEntity.class);
         }
     }
-    public List<Category> findAll() {
+    public List<CategoryEntity> findAll() {
         try (Connection con = sql2o.open()) {
             String sql = "SELECT * FROM categories";
             return con.createQuery(sql)
-                    .executeAndFetch(Category.class);
+                    .executeAndFetch(CategoryEntity.class);
         }
     }
 
-    public Category save(Category category) {
+    public CategoryEntity save(CategoryEntity category) {
         try (Connection con = sql2o.open()) {
             String sql = "INSERT INTO categories (name) VALUES (:name)";
             int id = con.createQuery(sql, true)
@@ -47,16 +47,16 @@ public class CategoryRepository {
         }
     }
 
-    public Category update(long id, Category category) {
+    public CategoryEntity update(long id, CategoryEntity category) {
         try (Connection con = sql2o.open()) {
             String sql = "UPDATE categories SET name = :name WHERE id = :id";
             con.createQuery(sql)
                     .addParameter("name", category.getName())
                     .addParameter("id", id)
                     .executeUpdate();
-            Category updatedCategory = con.createQuery("SELECT * FROM categories WHERE id = :id")
+            CategoryEntity updatedCategory = con.createQuery("SELECT * FROM categories WHERE id = :id")
                     .addParameter("id", category.getId())
-                    .executeAndFetchFirst(Category.class);
+                    .executeAndFetchFirst(CategoryEntity.class);
 
             return updatedCategory;
         }

@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.Product;
+import com.example.backend.entities.ProductEntity;
 import com.example.backend.services.ProductServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<Product> products = productServices.getAllProducts();
+        List<ProductEntity> products = productServices.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postProduct(@RequestBody Product product) {
+    public ResponseEntity<?> postProduct(@RequestBody ProductEntity product) {
         try {
             return new ResponseEntity<>(productServices.postProduct(product), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putProduct(@PathVariable long id, @RequestBody Product product) {
+    public ResponseEntity<?> putProduct(@PathVariable long id, @RequestBody ProductEntity product) {
         try {
             return new ResponseEntity<>(productServices.putProduct(id, product), HttpStatus.OK);
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.entities.Product;
+import com.example.backend.entities.ProductEntity;
 import com.example.backend.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +15,12 @@ public class ProductServices {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public Product getProduct(long id) {
-        Product product = productRepository.findById(id);
+    public ProductEntity getProduct(long id) {
+        ProductEntity product = productRepository.findById(id);
 
         if (product == null) {
             throw new NoSuchElementException("Product not found");
@@ -29,16 +29,16 @@ public class ProductServices {
         return product;
     }
 
-    public Product postProduct(Product product) {
+    public ProductEntity postProduct(ProductEntity product) {
         return productRepository.save(product);
     }
 
-    public Product putProduct(long id, Product product) {
+    public ProductEntity putProduct(long id, ProductEntity product) {
         return productRepository.update(id, product);
     }
 
     public boolean softDeleteProduct(long id) {
-        Product product = getProduct(id);
+        ProductEntity product = getProduct(id);
         if (product == null) {
             throw new NoSuchElementException("Product not found");
         }

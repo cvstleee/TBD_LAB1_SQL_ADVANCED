@@ -9,12 +9,13 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetails {
+public class ProductEntity {
     private long id;
-    private long order_id;
-    private long product_id;
-    private int quantity;
-    private double unit_price;
+    private String name;
+    private String description;
+    private double price;
+    private int stock;
+    private String state;
+    private long category_id;
     private Timestamp deleted_at;
-
 }

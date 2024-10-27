@@ -1,6 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.entities.OrderDetails;
+import com.example.backend.entities.OrderDetailsEntity;
 import com.example.backend.repositories.OrderDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,28 +18,28 @@ public class OrderDetailsService {
         this.repo = repo;
     }
 
-    public List<OrderDetails> getOrderDetails() {
+    public List<OrderDetailsEntity> getOrderDetails() {
         return repo.findAll();
     }
 
-    public OrderDetails getOrderDetails(long id) {
-        OrderDetails orderDetail = repo.findById(id);
+    public OrderDetailsEntity getOrderDetails(long id) {
+        OrderDetailsEntity orderDetail = repo.findById(id);
         if (orderDetail == null) {
             throw new NoSuchElementException("Order Detail Not Found");
         }
         return orderDetail;
     }
 
-    public OrderDetails postOrderDetails(OrderDetails orderDetails) {
+    public OrderDetailsEntity postOrderDetails(OrderDetailsEntity orderDetails) {
         return repo.save(orderDetails);
     }
 
-    public OrderDetails putOrderDetails(long id, OrderDetails orderDetails) {
+    public OrderDetailsEntity putOrderDetails(long id, OrderDetailsEntity orderDetails) {
         return repo.update(id, orderDetails);
     }
 
     public boolean softDeleteOrderDetails(long id) {
-        OrderDetails orderDetails = getOrderDetails(id);
+        OrderDetailsEntity orderDetails = getOrderDetails(id);
         if (orderDetails == null) {
             throw new NoSuchElementException("Order Detail Not Found");
         }
