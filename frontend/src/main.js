@@ -1,12 +1,10 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
+import vuetify from "./plugins/vuetify"; // Asegúrate de que el archivo de plugins esté configurado
 
-// Crear la aplicación Vue
-const app = createApp(App);
+import router from "./routers/routers";
 
-// Usar Vuetify
-app.use(vuetify);
-
-// Montar la aplicación en el elemento con id "app"
-app.mount("#app");
+createApp(App)
+  .use(vuetify) // Agrega Vuetify aquí
+  .use(router)
+  .mount("#app");
