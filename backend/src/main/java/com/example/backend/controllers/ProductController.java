@@ -35,10 +35,10 @@ public class ProductController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> postProduct(@RequestBody ProductEntity product) {
+    @PostMapping("/{categoryId}")
+    public ResponseEntity<?> postProduct(@RequestBody ProductEntity product, @PathVariable long categoryId) {
         try {
-            return new ResponseEntity<>(productServices.postProduct(product), HttpStatus.CREATED);
+            return new ResponseEntity<>(productServices.postProduct(product, categoryId), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }

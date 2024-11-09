@@ -15,7 +15,8 @@ const products = ref([]);
 
 onMounted(async () => {
   try {
-    products.value = await productService.getProducts();
+    const response = await productService.getProducts();
+    console.log(response);
   } catch (error) {
     console.error(error.message);
   }

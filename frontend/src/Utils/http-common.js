@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCESS_TOKEN } from "./Constants";
+import { TOKEN } from "./Constants";
 import { useCookies } from "vue3-cookies";
 
 const { cookies } = useCookies();
@@ -18,7 +18,8 @@ export default axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const token = cookies.get(ACCESS_TOKEN);
+    console.log(TOKEN);
+    const token = cookies.get(TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
