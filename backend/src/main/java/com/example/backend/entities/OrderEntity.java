@@ -10,10 +10,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderEntity {
-    private long id;
+    private int id;
     private Timestamp order_date;
     private String state;
-    private long client_id;
+    private int client_id;
     private double total;
     private Timestamp deleted_at;
 }

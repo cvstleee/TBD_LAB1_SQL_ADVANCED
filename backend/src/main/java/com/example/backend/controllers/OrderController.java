@@ -2,61 +2,47 @@ package com.example.backend.controllers;
 
 import com.example.backend.entities.OrderEntity;
 import com.example.backend.services.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/orders")
 public class OrderController {
 
-    private final OrderService orderService;
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderEntity>> getAllOrders() {
+    public ResponseEntity<List<OrderEntity>> getOrders() {
         List<OrderEntity> orders = orderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrder(@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(orderService.getOrderById(id), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<OrderEntity> getOrder(@PathVariable Long id) {
+        return new ResponseEntity<>(orderService.getOrderById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> postOrder(@RequestBody OrderEntity order) {
-        try {
-            return new ResponseEntity<>(orderService.postOrder(order), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<OrderEntity> postOrder(@RequestBody OrderEntity order) {
+        return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putOrder(@PathVariable long id, @RequestBody OrderEntity order) {
-        try {
-            return new ResponseEntity<>(orderService.updateOrder(id, order), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<OrderEntity> putOrder(@PathVariable Long id, @RequestBody OrderEntity order) {
+        return new ResponseEntity<>(orderService.updateOrder(id, order), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable long id) {
-        boolean isDeleted = orderService.softDeletedOrder(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Map<String, Boolean>> deleteOrder(@PathVariable Long id) {
+        HashMap<String, Boolean> response = new HashMap<>();
+        response.put("success", orderService.deletedOrder(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

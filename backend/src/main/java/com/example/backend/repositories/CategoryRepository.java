@@ -13,25 +13,41 @@ import java.util.List;
 public class CategoryRepository {
 
     @Autowired
-    private final Sql2o sql2o;
+    private Sql2o sql2o;
 
-    public CategoryRepository(Sql2o sql2o) {
-        this.sql2o = sql2o;
+    public List<CategoryEntity> findAll() {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM categories WHERE deleted_at IS NULL";
+            return con.createQuery(sql)
+                    .executeAndFetch(CategoryEntity.class);
+        }
     }
 
     public CategoryEntity findById(long id) {
         try (Connection con = sql2o.open()) {
-            String sql = "SELECT * FROM categories WHERE id = :id";
+            String sql = "SELECT * FROM categories WHERE id = :id AND deleted_at IS NULL";
             return con.createQuery(sql)
                     .addParameter("id", id)
                     .executeAndFetchFirst(CategoryEntity.class);
         }
     }
-    public List<CategoryEntity> findAll() {
+
+    public CategoryEntity findByName(String name) {
         try (Connection con = sql2o.open()) {
-            String sql = "SELECT * FROM categories";
+            String sql = "SELECT * FROM categories WHERE name = :name AND deleted_at IS NULL";
             return con.createQuery(sql)
-                    .executeAndFetch(CategoryEntity.class);
+                    .addParameter("name", name)
+                    .executeAndFetchFirst(CategoryEntity.class);
+        }
+    }
+
+    public CategoryEntity findByNameAndNotId(String name, long id) {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM categories WHERE name = :name AND id <> :id  AND deleted_at IS NULL";
+            return con.createQuery(sql)
+                    .addParameter("name", name)
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(CategoryEntity.class);
         }
     }
 
@@ -62,7 +78,7 @@ public class CategoryRepository {
         }
     }
 
-    public boolean softDelete (long id) {
+    public boolean delete(long id) {
         String query = "UPDATE categories SET deleted_at = :deletedAt WHERE id = :id AND deleted_at IS NULL";
         try (Connection con = sql2o.open()) {
             int rowsSoftDeleted = con.createQuery(query)

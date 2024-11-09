@@ -4,7 +4,6 @@ import com.example.backend.entities.ClientEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
 import com.example.backend.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,16 +12,13 @@ import java.util.List;
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    public List<ClientEntity> getClients() {
+    public List<ClientEntity> getAllClients() {
         return clientRepository.findAll();
     }
 
-    public ClientEntity getClient(long id) {
+    public ClientEntity getClientById(Long id) {
         ClientEntity clientEntity = clientRepository.findById(id);
-
         if (clientEntity == null) {
             throw new EntityNotFoundException("Client not found");
         }
@@ -30,21 +26,25 @@ public class ClientService {
         return clientEntity;
     }
 
-    public ClientEntity putClient(long id, ClientEntity clientEntity) {
-        ClientEntity existingClientEntityByEmail = clientRepository.findByEmail(clientEntity.getEmail());
-        if (existingClientEntityByEmail != null) {
+    public ClientEntity updateClient(Long id, ClientEntity clientEntity) {
+        ClientEntity possibleClient = clientRepository.findById(id);
+        if (possibleClient == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+        ClientEntity existingClient = clientRepository.findByEmailAndNotId(clientEntity.getEmail(), id);
+        if (existingClient != null) {
             throw new IllegalStateException("The email is already used");
         }
 
         return clientRepository.update(id, clientEntity);
     }
 
-    public boolean deleteClient(long id) {
+    public boolean deleteClient(Long id) {
         ClientEntity clientEntity = clientRepository.findById(id);
         if (clientEntity == null) {
             throw new EntityNotFoundException("Client not found");
         }
 
-        return clientRepository.softDelete(id);
+        return clientRepository.delete(id);
     }
 }

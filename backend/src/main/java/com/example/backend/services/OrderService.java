@@ -1,48 +1,60 @@
 package com.example.backend.services;
 
+import com.example.backend.entities.ClientEntity;
 import com.example.backend.entities.OrderEntity;
+import com.example.backend.exceptions.EntityNotFoundException;
+import com.example.backend.repositories.ClientRepository;
 import com.example.backend.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class OrderService {
 
     @Autowired
-    private final OrderRepository orderRepository;
-
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    private OrderRepository orderRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
     public List<OrderEntity> getAllOrders() {
         return orderRepository.findAll();
     }
 
-    public OrderEntity getOrderById(long id) {
+    public OrderEntity getOrderById(Long id) {
         OrderEntity order = orderRepository.findById(id);
         if (order == null) {
-            throw new NoSuchElementException("Order not found");
+            throw new EntityNotFoundException("Order not found");
         }
+
         return order;
     }
 
-    public OrderEntity postOrder(OrderEntity order) {
+    public OrderEntity createOrder(OrderEntity order) {
+        ClientEntity possibleClient = clientRepository.findById(order.getClient_id());
+        if (possibleClient == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+
         return orderRepository.save(order);
     }
 
-    public OrderEntity updateOrder(long id, OrderEntity order) {
+    public OrderEntity updateOrder(Long id, OrderEntity order) {
+        OrderEntity possibleOrder = orderRepository.findById(id);
+        if (possibleOrder == null) {
+            throw new EntityNotFoundException("Order not found");
+        }
+
         return orderRepository.update(id, order);
     }
 
-    public boolean softDeletedOrder(long id) {
-        OrderEntity order = getOrderById(id);
+    public boolean deletedOrder(Long id) {
+        OrderEntity order = orderRepository.findById(id);
         if (order == null) {
-            throw new NoSuchElementException("Order not found");
+            throw new EntityNotFoundException("Order not found");
         }
-        return orderRepository.softDelete(id);
+
+        return orderRepository.delete(id);
     }
 }

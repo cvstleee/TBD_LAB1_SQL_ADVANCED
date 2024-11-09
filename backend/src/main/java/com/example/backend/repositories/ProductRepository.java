@@ -13,21 +13,18 @@ import java.util.List;
 public class ProductRepository {
 
     @Autowired
-    private final Sql2o sql2o;
-    public ProductRepository(Sql2o sql2o) {
-        this.sql2o = sql2o;
-    }
+    private Sql2o sql2o;
 
     public List<ProductEntity> findAll() {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM products")
+            return con.createQuery("SELECT * FROM products WHERE deleted_at IS NULL")
                     .executeAndFetch(ProductEntity.class);
         }
     }
 
     public ProductEntity findById(long id) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM products WHERE id=:id")
+            return con.createQuery("SELECT * FROM products WHERE id=:id AND deleted_at IS NULL")
                     .addParameter("id", id)
                     .executeAndFetchFirst(ProductEntity.class);
         }
@@ -53,9 +50,7 @@ public class ProductRepository {
 
     public ProductEntity update(long id, ProductEntity product) {
         try (Connection con = sql2o.open()) {
-            String query = "UPDATE products " +
-                    "SET stock =:stock " +
-                    "WHERE id = :id";
+            String query = "UPDATE products SET stock =:stock WHERE id = :id";
             con.createQuery(query)
                     .addParameter("stock", product.getStock())
                     .addParameter("id", id)
@@ -69,7 +64,7 @@ public class ProductRepository {
 
     }
 
-    public boolean softDelete(long id) {
+    public boolean delete(long id) {
         String query = "UPDATE products SET deleted_at = :deletedAt WHERE id = :id AND deleted_at IS NULL";
         try (Connection con = sql2o.open()) {
             int rowsSoftDeleted = con.createQuery(query)
