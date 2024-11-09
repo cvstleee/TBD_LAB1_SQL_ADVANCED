@@ -16,6 +16,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     public ClientEntity register(RegisterDTO clientDTO) {
         ClientEntity existingClientEntityByEmail = clientRepository.findByEmail(clientDTO.getEmail());
         if (existingClientEntityByEmail != null) {

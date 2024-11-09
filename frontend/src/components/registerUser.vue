@@ -27,56 +27,64 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'RegisterUser',
-    data() {
-        return {
-            user: {
-                name: '',
-                address: '',
-                email: '',
-                password: '',
-                phone: ''
-            }
-        };
-    },
-    methods: {
-        registerUser() {
-            // Aquí puedes manejar el registro del usuario
-            console.log('Usuario registrado:', this.user);
-        }
+<script setup>
+import { reactive } from 'vue';
+import { postClient } from '../services/clientService';
+
+// Definimos el objeto reactivo para el usuario
+const user = reactive({
+    name: '',
+    address: '',
+    email: '',
+    password: '',
+    phone: ''
+});
+
+// Función para manejar el registro del usuario
+const registerUser = () => {
+    const response = postClient(user);
+    if (response.status === 201) {
+        alert('Usuario registrado correctamente');
+    } else {
+        alert('Error al registrar el usuario');
     }
-}
+    console.log('Usuario registrado:', user);
+};
 </script>
 
 <style scoped>
 .register-container {
     max-width: 400px;
-    margin: 0 auto; /* Centra el contenedor */
+    margin: 0 auto;
+    /* Centra el contenedor */
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 h1 {
-    text-align: center; /* Centra el texto del título */
+    text-align: center;
+    /* Centra el texto del título */
     color: green;
 }
 
 form div {
-    margin-bottom: 15px; /* Espaciado entre los campos */
+    margin-bottom: 15px;
+    /* Espaciado entre los campos */
 }
 
 label {
-    display: block; /* Asegura que las etiquetas estén en línea separada */
-    margin-bottom: 5px; /* Espaciado entre la etiqueta y el campo */
+    display: block;
+    /* Asegura que las etiquetas estén en línea separada */
+    margin-bottom: 5px;
+    /* Espaciado entre la etiqueta y el campo */
 }
 
 input {
     width: 100%;
     padding: 8px;
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    box-sizing: border-box;
+    /* Incluye padding en el ancho total */
 }
 
 button {

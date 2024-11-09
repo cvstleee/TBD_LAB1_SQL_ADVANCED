@@ -1,5 +1,6 @@
-import httpClient from './httpClient';
+import httpClient from "../Utils/http-common";
 
-const clientService =(data) => {
-    return httpClient.post('api/v1/clients', data);
-}
+export const postClient = (userData) => {
+  const response = httpClient.post("auth/register", userData);
+  return { data: response.data, status: response.status };
+};
