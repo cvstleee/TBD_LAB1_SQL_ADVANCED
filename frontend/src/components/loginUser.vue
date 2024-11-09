@@ -4,31 +4,32 @@
         <form @submit.prevent="login">
             <div>
                 <label for="email">Email:</label>
-                <input type="email" v-model="email" required />
+                <input type="email" v-model="userData.email" required />
             </div>
             <div>
                 <label for="password">Password:</label>
-                <input type="password" v-model="password" required />
+                <input type="password" v-model="userData.password" required />
             </div>
             <button type="submit">Iniciar Sesión</button>
         </form>
     </div>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            email: '',
-            password: ''
-        };
-    },
-    methods: {
-        login() {
-            // Aquí puedes agregar la lógica para iniciar sesión
-            console.log('Email:', this.email);
-            console.log('Password:', this.password);
-        }
+<script setup>
+import { ref } from 'vue';
+import { loginUser } from '../services/clientService';
+
+// Definimos las variables reactivas para email y password
+const userData = ref({ email: '', password: '' });
+
+// Función para manejar el inicio de sesión
+const login = async () => {
+    const response = await loginUser(userData.value);
+    console.log('Response:', response);
+    if (response.status === 200) {
+        alert('Sesión iniciada correctamente');
+    } else {
+        alert('Error al iniciar sesión');
     }
 };
 </script>

@@ -4,23 +4,23 @@
         <form @submit.prevent="registerUser">
             <div>
                 <label for="name">Nombre:</label>
-                <input type="text" id="name" v-model="user.name" required />
+                <input type="text" id="name" v-model="userData.name" required />
             </div>
             <div>
                 <label for="address">Dirección:</label>
-                <input type="text" id="address" v-model="user.address" required />
+                <input type="text" id="address" v-model="userData.address" required />
             </div>
             <div>
                 <label for="email">Email:</label>
-                <input type="email" id="email" v-model="user.email" required />
+                <input type="email" id="email" v-model="userData.email" required />
             </div>
             <div>
                 <label for="password">Contraseña:</label>
-                <input type="password" id="password" v-model="user.password" required />
+                <input type="password" id="password" v-model="userData.password" required />
             </div>
             <div>
                 <label for="phone">Teléfono:</label>
-                <input type="tel" id="phone" v-model="user.phone" required />
+                <input type="tel" id="phone" v-model="userData.phone" required />
             </div>
             <button type="submit">Registrar</button>
         </form>
@@ -32,7 +32,7 @@ import { reactive } from 'vue';
 import { postClient } from '../services/clientService';
 
 // Definimos el objeto reactivo para el usuario
-const user = reactive({
+const userData = reactive({
     name: '',
     address: '',
     email: '',
@@ -41,14 +41,13 @@ const user = reactive({
 });
 
 // Función para manejar el registro del usuario
-const registerUser = () => {
-    const response = postClient(user);
+const registerUser = async () => {
+    const response = await postClient(userData);
     if (response.status === 201) {
         alert('Usuario registrado correctamente');
     } else {
         alert('Error al registrar el usuario');
     }
-    console.log('Usuario registrado:', user);
 };
 </script>
 

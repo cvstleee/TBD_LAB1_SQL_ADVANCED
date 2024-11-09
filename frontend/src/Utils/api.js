@@ -4,9 +4,7 @@ import { useCookies } from "vue3-cookies";
 
 const { cookies } = useCookies();
 
-const api = axios.create({
-  baseURL: "http://localhost:8080",
-});
+const api = axios.create({});
 
 api.interceptors.request.use(
   (config) => {

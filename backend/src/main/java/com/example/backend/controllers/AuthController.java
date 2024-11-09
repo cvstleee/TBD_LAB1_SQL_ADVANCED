@@ -32,13 +32,11 @@ public class AuthController {
     public ResponseEntity<Map<String, Boolean>> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         String token = authService.login(loginDTO);
 
-        Cookie jwtCookie = new Cookie("JWT", token);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(60 * 60 * 24);
+        // Crear la cookie manualmente con los atributos que necesitas
+        String cookieValue = "JWT=" + token + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=" + (60 * 60 * 24);
 
-        response.addCookie(jwtCookie);
+        // Agregar la cookie al encabezado Set-Cookie
+        response.addHeader("Set-Cookie", cookieValue);
 
         HashMap<String, Boolean> message = new HashMap<>();
         message.put("success", true);
