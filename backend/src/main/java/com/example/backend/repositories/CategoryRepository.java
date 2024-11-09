@@ -32,6 +32,25 @@ public class CategoryRepository {
         }
     }
 
+    public CategoryEntity findByName(String name) {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM categories WHERE name = :name AND deleted_at IS NULL";
+            return con.createQuery(sql)
+                    .addParameter("name", name)
+                    .executeAndFetchFirst(CategoryEntity.class);
+        }
+    }
+
+    public CategoryEntity findByNameAndNotId(String name, long id) {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM categories WHERE name = :name AND id <> :id  AND deleted_at IS NULL";
+            return con.createQuery(sql)
+                    .addParameter("name", name)
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(CategoryEntity.class);
+        }
+    }
+
     public CategoryEntity save(CategoryEntity category) {
         try (Connection con = sql2o.open()) {
             String sql = "INSERT INTO categories (name) VALUES (:name)";

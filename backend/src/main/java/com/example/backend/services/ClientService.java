@@ -19,7 +19,6 @@ public class ClientService {
 
     public ClientEntity getClientById(Long id) {
         ClientEntity clientEntity = clientRepository.findById(id);
-
         if (clientEntity == null) {
             throw new EntityNotFoundException("Client not found");
         }
@@ -28,9 +27,12 @@ public class ClientService {
     }
 
     public ClientEntity updateClient(Long id, ClientEntity clientEntity) {
-        ClientEntity existingClientEntityByEmail = clientRepository.findByEmail(clientEntity.getEmail());
-
-        if (existingClientEntityByEmail != null) {
+        ClientEntity possibleClient = clientRepository.findById(id);
+        if (possibleClient == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+        ClientEntity existingClient = clientRepository.findByEmailAndNotId(clientEntity.getEmail(), id);
+        if (existingClient != null) {
             throw new IllegalStateException("The email is already used");
         }
 
@@ -39,7 +41,6 @@ public class ClientService {
 
     public boolean deleteClient(Long id) {
         ClientEntity clientEntity = clientRepository.findById(id);
-
         if (clientEntity == null) {
             throw new EntityNotFoundException("Client not found");
         }

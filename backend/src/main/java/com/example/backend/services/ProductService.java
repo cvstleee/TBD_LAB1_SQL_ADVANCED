@@ -23,7 +23,6 @@ public class ProductService {
 
     public ProductEntity getProductById(Long id) {
         ProductEntity product = productRepository.findById(id);
-
         if (product == null) {
             throw new EntityNotFoundException("Product not found");
         }
@@ -32,26 +31,30 @@ public class ProductService {
     }
 
     public ProductEntity createProduct(ProductEntity product, Long categoryId) {
-        CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-
-        if (categoryEntity == null) {
+        CategoryEntity possibleCategory = categoryRepository.findById(categoryId);
+        if (possibleCategory == null) {
             throw new EntityNotFoundException("Category not found");
-        }else {
-            product.setCategory_id(categoryEntity.getId());
-            return productRepository.save(product);
-
         }
+
+        product.setCategory_id(possibleCategory.getId());
+        return productRepository.save(product);
     }
 
     public ProductEntity updateProduct(Long id, ProductEntity product) {
+        ProductEntity possibleProduct = productRepository.findById(id);
+        if (possibleProduct == null) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
         return productRepository.update(id, product);
     }
 
     public boolean deleteProduct(Long id) {
-        ProductEntity product = productRepository.findById(id);
-        if (product == null) {
+        ProductEntity possibleProduct = productRepository.findById(id);
+        if (possibleProduct == null) {
             throw new EntityNotFoundException("Product not found");
         }
+
         return productRepository.delete(id);
     }
 

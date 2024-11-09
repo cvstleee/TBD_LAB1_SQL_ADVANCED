@@ -37,6 +37,16 @@ public class ClientRepository {
         }
     }
 
+    public ClientEntity findByEmailAndNotId(String email, long id) {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM clients WHERE email = :email AND id != :id AND deleted_at IS NULL";
+            return con.createQuery(sql)
+                    .addParameter("email", email)
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(ClientEntity.class);
+        }
+    }
+
     public ClientEntity findByPhone(String phone) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM clients WHERE phone = :phone AND deleted_at IS NULL")

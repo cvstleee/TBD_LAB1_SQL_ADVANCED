@@ -20,7 +20,6 @@ public class CategoryService {
 
     public CategoryEntity getCategoryById(Long id) {
         CategoryEntity category = categoryRepository.findById(id);
-
         if (category == null) {
             throw new EntityNotFoundException("Category not found");
         }
@@ -29,18 +28,33 @@ public class CategoryService {
     }
 
     public CategoryEntity createCategory(CategoryEntity category) {
+        CategoryEntity existingCategory = categoryRepository.findByName(category.getName());
+        if (existingCategory != null) {
+            throw new IllegalStateException("Category name already exists");
+        }
+
         return categoryRepository.save(category);
     }
 
     public CategoryEntity updateCategory(Long id, CategoryEntity category) {
+        CategoryEntity possibleCategory = categoryRepository.findById(id);
+        if (possibleCategory == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+        CategoryEntity existingCategory = categoryRepository.findByNameAndNotId(category.getName(), id);
+        if (existingCategory != null) {
+            throw new IllegalStateException("Category name already exists");
+        }
+
         return categoryRepository.update(id, category);
     }
 
     public boolean deleteCategory(Long id) {
-        CategoryEntity category = categoryRepository.findById(id);
-        if (category == null) {
+        CategoryEntity possibleCategory = categoryRepository.findById(id);
+        if (possibleCategory == null) {
             throw new EntityNotFoundException("Category not found");
         }
+
         return categoryRepository.delete(id);
     }
 }

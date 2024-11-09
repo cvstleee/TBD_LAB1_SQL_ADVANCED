@@ -36,11 +36,9 @@ public class AuthService {
 
     public String login(LoginDTO loginDTO) {
         ClientEntity clientEntity = clientRepository.findByEmail(loginDTO.getEmail());
-
         if (clientEntity == null) {
             throw new IllegalStateException("The email or password is incorrect");
         }
-
         if (!passwordEncoder.matches(loginDTO.getPassword(), clientEntity.getPassword())) {
             throw new IllegalStateException("The email or password is incorrect");
         }

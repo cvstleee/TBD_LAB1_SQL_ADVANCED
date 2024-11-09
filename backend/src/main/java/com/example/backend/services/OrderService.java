@@ -1,7 +1,9 @@
 package com.example.backend.services;
 
+import com.example.backend.entities.ClientEntity;
 import com.example.backend.entities.OrderEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
+import com.example.backend.repositories.ClientRepository;
 import com.example.backend.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
     public List<OrderEntity> getAllOrders() {
         return orderRepository.findAll();
@@ -23,14 +27,25 @@ public class OrderService {
         if (order == null) {
             throw new EntityNotFoundException("Order not found");
         }
+
         return order;
     }
 
     public OrderEntity createOrder(OrderEntity order) {
+        ClientEntity possibleClient = clientRepository.findById(order.getClient_id());
+        if (possibleClient == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+
         return orderRepository.save(order);
     }
 
     public OrderEntity updateOrder(Long id, OrderEntity order) {
+        OrderEntity possibleOrder = orderRepository.findById(id);
+        if (possibleOrder == null) {
+            throw new EntityNotFoundException("Order not found");
+        }
+
         return orderRepository.update(id, order);
     }
 
@@ -39,6 +54,7 @@ public class OrderService {
         if (order == null) {
             throw new EntityNotFoundException("Order not found");
         }
+
         return orderRepository.delete(id);
     }
 }
