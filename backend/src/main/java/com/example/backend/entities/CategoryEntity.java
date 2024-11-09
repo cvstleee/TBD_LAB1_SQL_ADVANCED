@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryEntity {
-    private long id;
+    private int id;
     private String name;
     private Timestamp deleted_at;
 }

@@ -10,12 +10,12 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductEntity {
-    private long id;
+    private int id;
     private String name;
     private String description;
     private double price;
     private int stock;
     private String state;
-    private long category_id;
+    private int category_id;
     private Timestamp deleted_at;
 }

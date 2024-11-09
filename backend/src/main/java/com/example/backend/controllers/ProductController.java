@@ -1,12 +1,13 @@
 package com.example.backend.controllers;
 
 import com.example.backend.entities.ProductEntity;
-import com.example.backend.services.ProductServices;
+import com.example.backend.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -14,52 +15,37 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private final ProductServices productServices;
-
-    public ProductController(ProductServices productServices) {
-        this.productServices = productServices;
-    }
+    private ProductService productService;
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<ProductEntity> products = productServices.getAllProducts();
+        List<ProductEntity> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProduct(@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(productServices.getProduct(id), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ProductEntity> getProductById(@PathVariable Long id) {
+        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
 
     @PostMapping("/{categoryId}")
-    public ResponseEntity<?> postProduct(@RequestBody ProductEntity product, @PathVariable long categoryId) {
-        try {
-            return new ResponseEntity<>(productServices.postProduct(product, categoryId), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<?> postProduct(@RequestBody ProductEntity product, @PathVariable Long categoryId) {
+        return new ResponseEntity<>(productService.createProduct(product, categoryId), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putProduct(@PathVariable long id, @RequestBody ProductEntity product) {
+    public ResponseEntity<?> putProduct(@PathVariable Long id, @RequestBody ProductEntity product) {
         try {
-            return new ResponseEntity<>(productServices.putProduct(id, product), HttpStatus.OK);
+            return new ResponseEntity<>(productService.updateProduct(id, product), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
-        boolean isDeleted = productServices.softDeleteProduct(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        HashMap<String, Boolean> response = new HashMap<>();
+        response.put("success", productService.deleteProduct(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

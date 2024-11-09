@@ -1,63 +1,48 @@
 package com.example.backend.controllers;
 
 import com.example.backend.entities.CategoryEntity;
-import com.example.backend.services.CategoryServices;
+import com.example.backend.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/categories")
 public class CategoryController {
 
-    private final CategoryServices categoryServices;
-
-    public CategoryController(CategoryServices categoryServices) {
-        this.categoryServices = categoryServices;
-    }
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryEntity>> getAllCategories() {
-        List<CategoryEntity> categorties = categoryServices.getAllCategories();
-        return new ResponseEntity<>(categorties, HttpStatus.OK);
+    public ResponseEntity<List<CategoryEntity>> getCategories() {
+        List<CategoryEntity> categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoriesById(@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(categoryServices.getCategoriesById(id), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<CategoryEntity> getCategoryById(@PathVariable Long id) {
+        return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<?> postCategories(@RequestBody CategoryEntity category) {
-        try {
-            return new ResponseEntity<>(categoryServices.postCategorie(category), HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<CategoryEntity> postCategory(@RequestBody CategoryEntity category) {
+        return new ResponseEntity<>(categoryService.createCategory(category), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putCategories(@PathVariable long id, @RequestBody CategoryEntity category) {
-        try {
-            return new ResponseEntity<>(categoryServices.putCategorie(id, category), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<CategoryEntity> putCategory(@PathVariable Long id, @RequestBody CategoryEntity category) {
+        return new ResponseEntity<>(categoryService.updateCategory(id, category), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable long id) {
-        boolean isDeleted = categoryServices.softDeleteCategory(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Map<String, Boolean>> deleteCategory(@PathVariable Long id) {
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("success", categoryService.deleteCategory(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

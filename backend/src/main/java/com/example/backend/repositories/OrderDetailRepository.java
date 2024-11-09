@@ -1,6 +1,6 @@
 package com.example.backend.repositories;
 
-import com.example.backend.entities.OrderDetailsEntity;
+import com.example.backend.entities.OrderDetailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
@@ -10,30 +10,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class OrderDetailsRepository {
+public class OrderDetailRepository {
 
     @Autowired
     private final Sql2o sql2o;
-    public OrderDetailsRepository(Sql2o sql2o) {
+    public OrderDetailRepository(Sql2o sql2o) {
         this.sql2o = sql2o;
     }
 
-    public List<OrderDetailsEntity> findAll() {
+    public List<OrderDetailEntity> findAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM order_details")
-                    .executeAndFetch(OrderDetailsEntity.class);
+                    .executeAndFetch(OrderDetailEntity.class);
         }
     }
 
-    public OrderDetailsEntity findById(long id) {
+    public OrderDetailEntity findById(long id) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM order_details WHERE id =:id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(OrderDetailsEntity.class);
+                    .executeAndFetchFirst(OrderDetailEntity.class);
         }
     }
 
-    public OrderDetailsEntity save(OrderDetailsEntity orderDetails) {
+    public OrderDetailEntity save(OrderDetailEntity orderDetails) {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO order_details (order_id, product_id, quantity, unit_price) " +
                     "VALUES (:order_id, :product_id, :quantity, :unit_price) RETURNING id";
@@ -49,7 +49,7 @@ public class OrderDetailsRepository {
         }
     }
 
-    public OrderDetailsEntity update(long id, OrderDetailsEntity orderDetails) {
+    public OrderDetailEntity update(long id, OrderDetailEntity orderDetails) {
         try (Connection con = sql2o.open()) {
             String query = "UPDATE order_details " +
                     "SET quantity =:quantity " +
@@ -59,9 +59,9 @@ public class OrderDetailsRepository {
                     .addParameter("id", id)
                     .executeUpdate();
 
-            OrderDetailsEntity updatedOrderDetails = con.createQuery("SELECT * FROM order_details WHERE id =:id")
+            OrderDetailEntity updatedOrderDetails = con.createQuery("SELECT * FROM order_details WHERE id =:id")
                     .addParameter("id", orderDetails.getId())
-                    .executeAndFetchFirst(OrderDetailsEntity.class);
+                    .executeAndFetchFirst(OrderDetailEntity.class);
             return updatedOrderDetails;
         }
     }

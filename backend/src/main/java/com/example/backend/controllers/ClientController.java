@@ -19,25 +19,24 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
-    public ResponseEntity<List<ClientEntity>> getUsers() {
-        return new ResponseEntity<>(clientService.getClients(), HttpStatus.OK);
+    public ResponseEntity<List<ClientEntity>> getClients() {
+        return new ResponseEntity<>(clientService.getAllClients(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientEntity> getUser(@PathVariable long id) {
-        return new ResponseEntity<>(clientService.getClient(id), HttpStatus.OK);
+    public ResponseEntity<ClientEntity> getClientById(@PathVariable Long id) {
+        return new ResponseEntity<>(clientService.getClientById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientEntity> putUser(@PathVariable long id, @RequestBody ClientEntity clientEntity) {
-        return new ResponseEntity<>(clientService.putClient(id, clientEntity), HttpStatus.OK);
+    public ResponseEntity<ClientEntity> putClient(@PathVariable Long id, @RequestBody ClientEntity client) {
+        return new ResponseEntity<>(clientService.updateClient(id, client), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable long id) {
-        boolean status = clientService.deleteClient(id);
+    public ResponseEntity<Map<String, Boolean>> deleteClient(@PathVariable Long id) {
         HashMap<String, Boolean> response = new HashMap<>();
-        response.put("status", status);
+        response.put("success", clientService.deleteClient(id));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

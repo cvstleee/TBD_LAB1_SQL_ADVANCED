@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientEntity {
-    private long id;
+    private int id;
     private String name;
     private String address;
     private String email;
