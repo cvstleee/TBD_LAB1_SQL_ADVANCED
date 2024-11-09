@@ -19,6 +19,12 @@ public class CategoryService {
     }
 
     public CategoryEntity getCategoryById(Long id) {
+        CategoryEntity category = categoryRepository.findById(id);
+
+        if (category == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
         return categoryRepository.findById(id);
     }
 
@@ -35,6 +41,6 @@ public class CategoryService {
         if (category == null) {
             throw new EntityNotFoundException("Category not found");
         }
-        return categoryRepository.softDelete(id);
+        return categoryRepository.delete(id);
     }
 }

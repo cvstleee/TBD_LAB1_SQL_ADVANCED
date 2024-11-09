@@ -12,22 +12,18 @@ import java.util.List;
 @Repository
 public class ClientRepository {
     @Autowired
-    private final Sql2o sql2o;
-
-    public ClientRepository(Sql2o sql2o) {
-        this.sql2o = sql2o;
-    }
+    private Sql2o sql2o;
 
     public List<ClientEntity> findAll() {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM clients")
+            return con.createQuery("SELECT * FROM clients WHERE deleted_at IS NULL")
                     .executeAndFetch(ClientEntity.class);
         }
     }
 
     public ClientEntity findById(long id) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM clients WHERE id = :id")
+            return con.createQuery("SELECT * FROM clients WHERE id = :id AND deleted_at IS NULL")
                     .addParameter("id", id)
                     .executeAndFetchFirst(ClientEntity.class);
         }
@@ -35,7 +31,7 @@ public class ClientRepository {
 
     public ClientEntity findByEmail(String email) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM clients WHERE email = :email")
+            return con.createQuery("SELECT * FROM clients WHERE email = :email AND deleted_at IS NULL")
                     .addParameter("email", email)
                     .executeAndFetchFirst((ClientEntity.class));
         }
@@ -43,7 +39,7 @@ public class ClientRepository {
 
     public ClientEntity findByPhone(String phone) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM clients WHERE phone = :phone")
+            return con.createQuery("SELECT * FROM clients WHERE phone = :phone AND deleted_at IS NULL")
                     .addParameter("phone", phone)
                     .executeAndFetchFirst(ClientEntity.class);
         }
@@ -69,9 +65,7 @@ public class ClientRepository {
     }
 
     public ClientEntity update(long id, ClientEntity clientEntity) {
-        String query = "UPDATE clients " +
-                "SET email = :email " +
-                "WHERE id = :id";
+        String query = "UPDATE clients SET email = :email WHERE id = :id";
 
         try (Connection con = sql2o.open()) {
             con.createQuery(query)
@@ -87,7 +81,7 @@ public class ClientRepository {
         }
     }
 
-    public boolean softDelete(long id) {
+    public boolean delete(long id) {
         String query = "UPDATE clients SET deleted_at = :deleted_at WHERE id = :id AND deleted_at IS NULL";
 
         try (Connection con = sql2o.open()) {

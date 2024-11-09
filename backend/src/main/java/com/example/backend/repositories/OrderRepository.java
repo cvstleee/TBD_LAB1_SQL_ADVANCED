@@ -20,14 +20,14 @@ public class OrderRepository {
 
     public List<OrderEntity> findAll() {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM orders")
+            return con.createQuery("SELECT * FROM orders WHERE deleted_at IS NULL")
                     .executeAndFetch(OrderEntity.class);
         }
     }
 
     public OrderEntity findById(long id) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM orders WHERE id=:id")
+            return con.createQuery("SELECT * FROM orders WHERE id=:id AND deleted_at IS NULL")
                     .addParameter("id", id)
                     .executeAndFetchFirst(OrderEntity.class);
         }
@@ -51,9 +51,7 @@ public class OrderRepository {
 
     public OrderEntity update(long id, OrderEntity order) {
         try (Connection con = sql2o.open()) {
-            String query = "UPDATE orders " +
-                    "SET state = :state " +
-                    "WHERE id = :id";
+            String query = "UPDATE orders SET state = :state WHERE id = :id";
             con.createQuery(query)
                     .addParameter("state", order.getState())
                     .addParameter("id", id)
@@ -65,7 +63,7 @@ public class OrderRepository {
         }
     }
 
-    public boolean softDelete(long id) {
+    public boolean delete(long id) {
         String query = "UPDATE orders SET deleted_at = :deletedAt WHERE id = :id AND deleted_at IS NULL";
         try (Connection con = sql2o.open()) {
             int rowsUpdated = con.createQuery(query)

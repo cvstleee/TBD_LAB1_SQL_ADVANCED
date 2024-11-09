@@ -44,6 +44,6 @@ public class ClientService {
             throw new EntityNotFoundException("Client not found");
         }
 
-        return clientRepository.softDelete(id);
+        return clientRepository.delete(id);
     }
 }

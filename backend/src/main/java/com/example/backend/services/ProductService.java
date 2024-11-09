@@ -52,7 +52,7 @@ public class ProductService {
         if (product == null) {
             throw new EntityNotFoundException("Product not found");
         }
-        return productRepository.softDelete(id);
+        return productRepository.delete(id);
     }
 
 }

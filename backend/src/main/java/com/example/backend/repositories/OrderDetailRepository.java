@@ -13,21 +13,18 @@ import java.util.List;
 public class OrderDetailRepository {
 
     @Autowired
-    private final Sql2o sql2o;
-    public OrderDetailRepository(Sql2o sql2o) {
-        this.sql2o = sql2o;
-    }
+    private Sql2o sql2o;
 
     public List<OrderDetailEntity> findAll() {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM order_details")
+            return con.createQuery("SELECT * FROM order_details WHERE deleted_at IS NULL")
                     .executeAndFetch(OrderDetailEntity.class);
         }
     }
 
     public OrderDetailEntity findById(long id) {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM order_details WHERE id =:id")
+            return con.createQuery("SELECT * FROM order_details WHERE id =:id AND deleted_at IS NULL")
                     .addParameter("id", id)
                     .executeAndFetchFirst(OrderDetailEntity.class);
         }
@@ -51,9 +48,7 @@ public class OrderDetailRepository {
 
     public OrderDetailEntity update(long id, OrderDetailEntity orderDetails) {
         try (Connection con = sql2o.open()) {
-            String query = "UPDATE order_details " +
-                    "SET quantity =:quantity " +
-                    "WHERE id =:id";
+            String query = "UPDATE order_details SET quantity =:quantity WHERE id =:id";
             con.createQuery(query)
                     .addParameter("quantity", orderDetails.getQuantity())
                     .addParameter("id", id)
@@ -66,7 +61,7 @@ public class OrderDetailRepository {
         }
     }
 
-    public boolean softDelete(long id) {
+    public boolean delete(long id) {
         String query = "UPDATE order_details SET deleted_at = :deletedAt WHERE id = :id AND deleted_at IS NULL";
         try (Connection con = sql2o.open()) {
             int rowsUpdated = con.createQuery(query)

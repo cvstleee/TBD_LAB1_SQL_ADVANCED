@@ -39,6 +39,6 @@ public class OrderService {
         if (order == null) {
             throw new EntityNotFoundException("Order not found");
         }
-        return orderRepository.softDelete(id);
+        return orderRepository.delete(id);
     }
 }
