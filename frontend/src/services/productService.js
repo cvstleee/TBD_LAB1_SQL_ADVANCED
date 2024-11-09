@@ -1,8 +1,6 @@
 // src/services/productService.js
 
-import httpClient from "../Utils/http-common";
-
-const API_URL = "http://tu-backend.com/api/v1/products"; // Cambia esta URL según tu configuración
+import httpClient from "../Utils/http-common"; // Cambia esta URL según tu configuración
 
 const productService = {
   async getProducts() {
@@ -29,7 +27,7 @@ const productService = {
 
   async postProduct(product) {
     try {
-      const response = await httpClient.post(API_URL, product);
+      const response = await httpClient.post("/api/v1/products/1", product);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -38,27 +36,27 @@ const productService = {
     }
   },
 
-  async putProduct(id, product) {
-    try {
-      const response = await httpClient.put(`${API_URL}/${id}`, product);
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        error.response ? error.response.data : "Error al actualizar producto"
-      );
-    }
-  },
+  //   async putProduct(id, product) {
+  //     try {
+  //       const response = await httpClient.put(`${API_URL}/${id}`, product);
+  //       return response.data;
+  //     } catch (error) {
+  //       throw new Error(
+  //         error.response ? error.response.data : "Error al actualizar producto"
+  //       );
+  //     }
+  //   },
 
-  async deleteProduct(id) {
-    try {
-      await httpClient.delete(`${API_URL}/${id}`);
-      return true; // Retorna true si se elimina correctamente
-    } catch (error) {
-      throw new Error(
-        error.response ? error.response.data : "Error al eliminar producto"
-      );
-    }
-  },
+  //   async deleteProduct(id) {
+  //     try {
+  //       await httpClient.delete(`${API_URL}/${id}`);
+  //       return true; // Retorna true si se elimina correctamente
+  //     } catch (error) {
+  //       throw new Error(
+  //         error.response ? error.response.data : "Error al eliminar producto"
+  //       );
+  //     }
+  //   },
 };
 
 export default productService;
