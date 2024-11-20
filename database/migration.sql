@@ -18,6 +18,7 @@ CREATE TABLE products (
     price DECIMAL(10, 2) NOT NULL,
     stock INT NOT NULL,
     state VARCHAR(50) NOT NULL,
+    shipping_date Date NOT NULL,
     category_id SERIAL NOT NULL,
     deleted_at TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id)
