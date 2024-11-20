@@ -5,9 +5,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.dtos.LoginDTO;
 import com.example.backend.dtos.RegisterDTO;
 import com.example.backend.entities.ClientEntity;
+import com.example.backend.exceptions.EntityNotFoundException;
 import com.example.backend.jwt.JwtUtil;
 import com.example.backend.repositories.ClientRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,17 @@ public class AuthService {
             throw new IllegalStateException("JWT not found");
         }
         throw new IllegalStateException("Cookies not found");
+    }
+
+    public ClientEntity getClientByToken(Cookie[] cookies) {
+        String token = JwtUtil.getJwtFromCookies(cookies);
+        String email = JwtUtil.extractEmailFromJwt(token);
+        ClientEntity clientEntity = clientRepository.findByEmail(email);
+
+        if (clientEntity == null) {
+            throw new EntityNotFoundException("Client not found");
+        }
+
+        return clientEntity;
     }
 }
