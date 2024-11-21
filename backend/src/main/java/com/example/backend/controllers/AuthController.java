@@ -1,18 +1,19 @@
 package com.example.backend.controllers;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.dtos.LoginDTO;
 import com.example.backend.dtos.RegisterDTO;
 import com.example.backend.entities.ClientEntity;
+import com.example.backend.jwt.JwtUtil;
 import com.example.backend.services.AuthService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +55,19 @@ public class AuthController {
         HashMap<String, Boolean> message = new HashMap<>();
         message.put("success", true);
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PostMapping("/verify-token")
+    public ResponseEntity<Map<String, Boolean>> verifyToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        authService.verifyToken(cookies);
+        HashMap<String, Boolean> message = new HashMap<>();
+        message.put("success", true);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<ClientEntity> getClientByJwt(HttpServletRequest request) {
+        return new ResponseEntity<>(authService.getClientByToken(request.getCookies()), HttpStatus.OK);
     }
 }
