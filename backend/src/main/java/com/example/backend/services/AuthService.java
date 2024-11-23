@@ -3,6 +3,7 @@ package com.example.backend.services;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.dtos.LoginDTO;
+import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
@@ -40,7 +41,7 @@ public class AuthService {
         return clientRepository.save(client);
     }
 
-    public String login(LoginDTO loginDTO) {
+    public LoginResponseDTO login(LoginDTO loginDTO) {
         ClientEntity clientEntity = clientRepository.findByEmail(loginDTO.getEmail());
         if (clientEntity == null) {
             throw new IllegalStateException("The email or password is incorrect");
@@ -49,7 +50,10 @@ public class AuthService {
             throw new IllegalStateException("The email or password is incorrect");
         }
 
-        return JwtUtil.createToken(loginDTO.getEmail());
+        return LoginResponseDTO.builder()
+                .token(JwtUtil.createToken(loginDTO.getEmail()))
+                .userId(clientEntity.getId())
+                .build();
     }
 
     public void verifyToken(Cookie[] cookies) {
