@@ -17,20 +17,21 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // Importa useRouter
 import { loginUser } from '../services/clientService';
+import { useStore } from 'vuex';
 
 // Definimos las variables reactivas para email y password
 const userData = ref({ email: '', password: '' });
-const router = useRouter(); // Inicializa el enrutador
+const store = useStore();
 
 // Función para manejar el inicio de sesión
 const login = async () => {
     const response = await loginUser(userData.value);
     console.log('Response:', response);
     if (response.status === 200) {
+        store.commit('setUser', response.data);
+        store.commit('login');
         alert('Sesión iniciada correctamente');
-        router.push('/home'); // Redirige a /home
     } else {
         alert('Error al iniciar sesión');
     }
