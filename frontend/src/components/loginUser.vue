@@ -30,7 +30,7 @@ const login = async () => {
     console.log('Response:', response);
     if (response.status === 200) {
         alert('Sesión iniciada correctamente');
-        router.push('/'); // Redirige a /home
+        router.push('/home'); // Redirige a /home
     } else {
         alert('Error al iniciar sesión');
     }
