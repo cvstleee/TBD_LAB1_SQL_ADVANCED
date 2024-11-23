@@ -6,7 +6,7 @@ import mapa from "../components/MapComponent.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/home",
     name: "Home",
     component: Home,
   },
