@@ -27,15 +27,25 @@
       <label for="state">Estado:
         <input type="text" id="state" name="state" v-model="product.state" />
       </label>
+      <!-- Category select -->
+      <label for="category">Categoría:
+        <select id="category" v-model="product.categoryId">
+          <option disabled value="">Seleccione una categoría</option>
+          <option v-for="category in categories" :key="category.id" :value="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </label>
       <!-- Submit button -->
       <button type="submit">Crear</button>
     </form>
   </div>
 </template>
-
 <script setup>
+
 import { ref, onMounted } from 'vue';
 import productService from '../services/productService';
+import categoryService from '../services/categoryService';
 
 // Definir el objeto product con sus propiedades iniciales
 const product = ref({
@@ -44,10 +54,12 @@ const product = ref({
   price: 0,
   stock: 0,
   state: '',
+  category_id: null, 
 });
 
-// Definir la lista de productos
+// Definir la lista de productos y categorías
 const products = ref([]);
+const categories = ref([]); 
 
 // Función para registrar un nuevo producto
 const registerProduct = async () => {
@@ -56,36 +68,34 @@ const registerProduct = async () => {
     const response = await productService.postProduct(product.value);
     console.log(response);
 
-    // Agregar el nuevo producto a la lista de productos
+    
     products.value.push(response);
 
-    // Limpiar el formulario después de enviar los datos
+   
     product.value = {
       name: '',
       description: '',
       price: 0,
       stock: 0,
       state: '',
+      category_id: null, 
     };
   } catch (error) {
     console.error(error.message);
   }
 };
 
-// Cargar los productos existentes cuando se monta el componente
 onMounted(async () => {
   try {
-    const response = await productService.getProducts();
-    products.value = response; // Asignar los productos obtenidos a la lista
-    console.log(response);
+    const responseProducts = await productService.getProducts();
+    products.value = responseProducts; 
+    console.log(responseProducts);
+    
+    const responseCategories = await categoryService.getCategories(); 
+    categories.value = responseCategories; 
+    console.log(responseCategories);
   } catch (error) {
     console.error(error.message);
   }
 });
 </script>
-
-<style scoped>
-body {
-  background-color: #f4f4f4;
-}
-</style>
