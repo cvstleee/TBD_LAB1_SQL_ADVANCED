@@ -1,10 +1,15 @@
 <template>
   <div>
     <h1>Productos</h1>
-    <ul>
-      <li v-for="product in products" :key="product.id">{{ product.name }}</li>
-    </ul>
+    
   </div>
+  <li v-for="product in products" :key="product.id">
+    {{ product.name }}
+    {{ product.id }}
+    <button @click="sendProductId(product)" style="background-color: blue; color: white;">Agregar a orden de compra</button>
+    
+  </li>
+
   <div>
     <form @submit.prevent="registerProduct">
       <!-- Name input -->
@@ -46,6 +51,7 @@
 import { ref, onMounted } from 'vue';
 import productService from '../services/productService';
 import categoryService from '../services/categoryService';
+import {orderService} from '../services/orderService';
 
 // Definir el objeto product con sus propiedades iniciales
 const product = ref({
@@ -98,4 +104,26 @@ onMounted(async () => {
     console.error(error.message);
   }
 });
+
+
+const sendProductId = async (product) => {
+  console.log(product.name);
+
+  const newOrderDetails = {
+    order_id: 4,
+    product_id: product.id,
+    quantity: 1,
+    unit_price: product.price,
+  };
+
+console.log(newOrderDetails);
+  try {
+    const response = await orderService.postOrderDetails(newOrderDetails);
+    console.log(response);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+
 </script>

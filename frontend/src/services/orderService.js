@@ -22,7 +22,19 @@ export const orderService = {
                 error.response ? error.response.data : "Error al obtener orden"
             );
         }
-    }
+    },
+
+
+    async postOrderDetails(order) {
+        try {
+            const response = await httpClient.post("/api/v1/ordersDetails", order);
+            return response.data;
+        } catch (error) {
+            throw new Error(
+                error.response ? error.response.data : "Error al crear orden"
+            );
+        }
+    },
 
 }
 
