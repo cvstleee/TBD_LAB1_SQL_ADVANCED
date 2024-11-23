@@ -3,6 +3,7 @@ package com.example.backend.controllers;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.dtos.LoginDTO;
+import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.jwt.JwtUtil;
@@ -30,15 +31,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Boolean>> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
-        String token = authService.login(loginDTO);
+    public ResponseEntity<Map<String, Integer>> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+        LoginResponseDTO responseDTO = authService.login(loginDTO);
 
-        String cookieValue = "JWT=" + token + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=" + (60 * 60 * 24);
+        String cookieValue = "JWT=" + responseDTO.getToken() + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=" + (60 * 60 * 24);
 
         response.addHeader("Set-Cookie", cookieValue);
 
-        HashMap<String, Boolean> message = new HashMap<>();
-        message.put("success", true);
+        HashMap<String, Integer> message = new HashMap<>();
+        message.put("user_id", responseDTO.getUserId());
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
