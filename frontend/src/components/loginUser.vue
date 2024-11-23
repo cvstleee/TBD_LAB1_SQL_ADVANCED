@@ -17,10 +17,12 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // Importa useRouter
 import { loginUser } from '../services/clientService';
 
 // Definimos las variables reactivas para email y password
 const userData = ref({ email: '', password: '' });
+const router = useRouter(); // Inicializa el enrutador
 
 // Función para manejar el inicio de sesión
 const login = async () => {
@@ -28,6 +30,7 @@ const login = async () => {
     console.log('Response:', response);
     if (response.status === 200) {
         alert('Sesión iniciada correctamente');
+        router.push('/home'); // Redirige a /home
     } else {
         alert('Error al iniciar sesión');
     }
