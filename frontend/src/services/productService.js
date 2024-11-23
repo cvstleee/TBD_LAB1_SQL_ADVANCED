@@ -16,7 +16,7 @@ const productService = {
 
   async getProduct(id) {
     try {
-      const response = await httpClient.get(`${API_URL}/${id}`);
+      const response = await httpClient.get(`/api/v1/products/${id}`);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -35,6 +35,8 @@ const productService = {
       );
     }
   },
+
+  
 
   //   async putProduct(id, product) {
   //     try {
