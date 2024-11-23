@@ -1,11 +1,11 @@
 <template>
   <VAppBar app color="#FF9800">
-    <VBtn to="/home">
-      <VToolbarTitle>Presta Banco: Créditos Hipotecarios</VToolbarTitle>
+    <VBtn to="/">
+      <VToolbarTitle>Gestión de Productos</VToolbarTitle>
     </VBtn>
     <VSpacer></VSpacer>
     <div class="login-button" v-if="!loginState">
-      <VBtn to="/registerUser" text>Register Customer</VBtn>
+      <VBtn to="/registerUser" text>Register Costumer</VBtn>
       <VBtn to="/login" text>Login</VBtn>
       <VBtn icon @click="toggleDrawer(true)">
         <VIcon>mdi-menu</VIcon>
