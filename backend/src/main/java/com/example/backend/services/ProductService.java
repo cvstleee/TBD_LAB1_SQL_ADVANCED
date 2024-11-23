@@ -16,6 +16,8 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private AuthService authService;
 
     public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
@@ -32,30 +34,33 @@ public class ProductService {
 
     public ProductEntity createProduct(ProductEntity product, Long categoryId) {
         CategoryEntity possibleCategory = categoryRepository.findById(categoryId);
+        int authIdClient = authService.getAuthIdClient();
         if (possibleCategory == null) {
             throw new EntityNotFoundException("Category not found");
         }
 
         product.setCategory_id(possibleCategory.getId());
-        return productRepository.save(product);
+        return productRepository.save(product, authIdClient);
     }
 
     public ProductEntity updateProduct(Long id, ProductEntity product) {
         ProductEntity possibleProduct = productRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (possibleProduct == null) {
             throw new EntityNotFoundException("Product not found");
         }
 
-        return productRepository.update(id, product);
+        return productRepository.update(id, product, authIdClient);
     }
 
     public boolean deleteProduct(Long id) {
         ProductEntity possibleProduct = productRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (possibleProduct == null) {
             throw new EntityNotFoundException("Product not found");
         }
 
-        return productRepository.delete(id);
+        return productRepository.delete(id, authIdClient);
     }
 
 }

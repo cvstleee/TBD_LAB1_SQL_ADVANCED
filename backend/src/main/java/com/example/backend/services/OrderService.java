@@ -17,6 +17,8 @@ public class OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private AuthService authService;
 
     public List<OrderEntity> getAllOrders() {
         return orderRepository.findAll();
@@ -33,28 +35,31 @@ public class OrderService {
 
     public OrderEntity createOrder(OrderEntity order) {
         ClientEntity possibleClient = clientRepository.findById(order.getClient_id());
+        int authIdClient = authService.getAuthIdClient();
         if (possibleClient == null) {
             throw new EntityNotFoundException("Client not found");
         }
 
-        return orderRepository.save(order);
+        return orderRepository.save(order, authIdClient);
     }
 
     public OrderEntity updateOrder(Long id, OrderEntity order) {
         OrderEntity possibleOrder = orderRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (possibleOrder == null) {
             throw new EntityNotFoundException("Order not found");
         }
 
-        return orderRepository.update(id, order);
+        return orderRepository.update(id, order, authIdClient);
     }
 
     public boolean deletedOrder(Long id) {
         OrderEntity order = orderRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (order == null) {
             throw new EntityNotFoundException("Order not found");
         }
 
-        return orderRepository.delete(id);
+        return orderRepository.delete(id, authIdClient);
     }
 }

@@ -14,6 +14,9 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private AuthService authService;
+
     public List<CategoryEntity> getAllCategories() {
         return categoryRepository.findAll();
     }
@@ -32,11 +35,13 @@ public class CategoryService {
         if (existingCategory != null) {
             throw new IllegalStateException("Category name already exists");
         }
+        int authIdClient = authService.getAuthIdClient();
 
-        return categoryRepository.save(category);
+        return categoryRepository.save(category, authIdClient);
     }
 
     public CategoryEntity updateCategory(Long id, CategoryEntity category) {
+        int authIdClient = authService.getAuthIdClient();
         CategoryEntity possibleCategory = categoryRepository.findById(id);
         if (possibleCategory == null) {
             throw new EntityNotFoundException("Category not found");
@@ -46,15 +51,16 @@ public class CategoryService {
             throw new IllegalStateException("Category name already exists");
         }
 
-        return categoryRepository.update(id, category);
+        return categoryRepository.update(id, category, authIdClient);
     }
 
     public boolean deleteCategory(Long id) {
+        int authIdClient = authService.getAuthIdClient();
         CategoryEntity possibleCategory = categoryRepository.findById(id);
         if (possibleCategory == null) {
             throw new EntityNotFoundException("Category not found");
         }
 
-        return categoryRepository.delete(id);
+        return categoryRepository.delete(id, authIdClient);
     }
 }

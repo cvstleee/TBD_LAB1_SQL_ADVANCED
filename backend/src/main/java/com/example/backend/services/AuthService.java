@@ -11,6 +11,8 @@ import com.example.backend.repositories.ClientRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,5 +80,19 @@ public class AuthService {
         }
 
         return clientEntity;
+    }
+
+    public int getAuthIdClient() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            ClientEntity clientEntity = clientRepository.findByEmail(email);
+
+            if (clientEntity == null) {
+                throw new EntityNotFoundException("Client not found");
+            }
+            return clientEntity.getId();
+        }
+        throw new EntityNotFoundException("No authenticated client found");
     }
 }
