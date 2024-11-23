@@ -2,113 +2,70 @@
   <div>
     <h1>Productos</h1>
     
-  </div>
-  <li v-for="product in products" :key="product.id">
-    {{ product.name }}
-    {{ product.id }}
-    <button @click="sendProductId(product)" style="background-color: blue; color: white;">Agregar a orden de compra</button>
-    
-  </li>
+    <!-- Botones para agregar producto -->
+    <div class="button-container">
+      <router-link to="/addProduct">
+        <button style="background-color: green; color: white;">Agregar Producto</button>
+      </router-link>
+    </div>
 
-  <div>
-    <form @submit.prevent="registerProduct">
-      <!-- Name input -->
-      <label for="name">Nombre:
-        <input type="text" id="name" name="name" v-model="product.name" />
-      </label>
-      <!-- Description input -->
-      <label for="description">Descripción:
-        <input type="text" id="description" name="description" v-model="product.description" />
-      </label>
-      <!-- Price input -->
-      <label for="price">Precio:
-        <input type="number" id="price" name="price" v-model.number="product.price" />
-      </label>
-      <!-- Stock input -->
-      <label for="stock">Stock:
-        <input type="number" id="stock" name="stock" v-model.number="product.stock" />
-      </label>
-      <!-- State input -->
-      <label for="state">Estado:
-        <input type="text" id="state" name="state" v-model="product.state" />
-      </label>
-      <!-- Category select -->
-      <label for="category">Categoría:
-        <select id="category" v-model="product.categoryId">
-          <option disabled value="">Seleccione una categoría</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id">
-            {{ category.name }}
-          </option>
-        </select>
-      </label>
-      <!-- Submit button -->
-      <button type="submit">Crear</button>
-    </form>
+    <!-- Tabla para mostrar productos -->
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Stock</th>
+          <th>Estado</th>
+          <th>Unidades a Pedir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="product in products" :key="product.id">
+          <td>{{ product.name }}</td>
+          <td>{{ product.stock }}</td> 
+          <td>{{ product.state }}</td> 
+          <td>
+            <!-- Contenedor para el campo de entrada y el botón -->
+            <div style="display: flex; align-items: center;">
+              <!-- Campo de entrada para unidades -->
+              <input 
+                type="number" 
+                v-model.number="product.quantity" 
+                min="1" 
+                max="product.stock" 
+                placeholder="Cantidad" 
+                style="width: 80px; margin-right: 5px;" 
+              />
+              <!-- Botón para agregar a orden -->
+              <button @click="sendProductId(product)" style="background-color: blue; color: white;">
+                Agregar a orden de compra
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
-<script setup>
 
+<script setup>
 import { ref, onMounted } from 'vue';
 import productService from '../services/productService';
-import categoryService from '../services/categoryService';
-import {orderService} from '../services/orderService';
+import { orderService } from '../services/orderService';
 
-// Definir el objeto product con sus propiedades iniciales
-const product = ref({
-  name: '',
-  description: '',
-  price: 0,
-  stock: 0,
-  state: '',
-  category_id: null, 
-});
-
-// Definir la lista de productos y categorías
-const products = ref([]);
-const categories = ref([]); 
-
-// Función para registrar un nuevo producto
-const registerProduct = async () => {
-  try {
-    // Llamar al servicio para crear un nuevo producto
-    const response = await productService.postProduct(product.value);
-    console.log(response);
-
-    
-    products.value.push(response);
-
-   
-    product.value = {
-      name: '',
-      description: '',
-      price: 0,
-      stock: 0,
-      state: '',
-      category_id: null, 
-    };
-  } catch (error) {
-    console.error(error.message);
-  }
-};
+// Definir la lista de productos
+const products = ref([]); 
 
 onMounted(async () => {
   try {
     const responseProducts = await productService.getProducts();
     products.value = responseProducts; 
-    console.log(responseProducts);
-    
-    const responseCategories = await categoryService.getCategories(); 
-    categories.value = responseCategories; 
-    console.log(responseCategories);
   } catch (error) {
     console.error(error.message);
   }
 });
 
-
 const sendProductId = async (product) => {
-  console.log(product.name);
-
   const newOrderDetails = {
     order_id: 4,
     product_id: product.id,
@@ -116,7 +73,6 @@ const sendProductId = async (product) => {
     unit_price: product.price,
   };
 
-console.log(newOrderDetails);
   try {
     const response = await orderService.postOrderDetails(newOrderDetails);
     console.log(response);
@@ -124,6 +80,28 @@ console.log(newOrderDetails);
     console.error(error.message);
   }
 }
-
-
 </script>
+
+<style scoped>
+.button-container {
+  margin-bottom: 20px; 
+}
+
+.form-title{
+  margin-top: 20px;
+}
+.product-table {
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+.product-table th, .product-table td {
+  border: 1px solid #ccc; 
+  padding: 10px; 
+  text-align: left; 
+}
+
+.product-table th {
+  background-color: #f2f2f2; 
+}
+</style>

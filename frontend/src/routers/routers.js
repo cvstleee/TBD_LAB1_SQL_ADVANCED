@@ -3,6 +3,7 @@ import Home from "../components/Home.vue";
 import Register from "../components/registerUser.vue";
 import login from "../components/loginUser.vue";
 import order from "../components/order.vue";
+import AddProduct from "../components/AddProduct.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/order",
     name: "order",
     component: order,
+  },
+  {
+    path: "/addProduct",
+    name: "AddProduct",
+    component: AddProduct,
   }
   
 ];
