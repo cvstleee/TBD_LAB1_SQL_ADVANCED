@@ -30,8 +30,10 @@ public class ProductRepository {
         }
     }
 
-    public ProductEntity save(ProductEntity product) {
-        try (Connection con = sql2o.open()) {
+    public ProductEntity save(ProductEntity product, int clientId) {
+        try (Connection con = sql2o.beginTransaction()) {
+            con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
+
             String query = "INSERT INTO products (name, description, price, stock, state, category_id) " +
                     "VALUES (:name, :description, :price, :stock, :state, :category_id) RETURNING id";
             int id = con.createQuery(query, true)
@@ -43,18 +45,22 @@ public class ProductRepository {
                     .addParameter("category_id", product.getCategory_id())
                     .executeUpdate()
                     .getKey(Integer.class);
+            con.commit();
             product.setId(id);
             return product;
         }
     }
 
-    public ProductEntity update(long id, ProductEntity product) {
-        try (Connection con = sql2o.open()) {
+    public ProductEntity update(long id, ProductEntity product, int clientId) {
+        try (Connection con = sql2o.beginTransaction()) {
+            con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
+
             String query = "UPDATE products SET stock =:stock WHERE id = :id";
             con.createQuery(query)
                     .addParameter("stock", product.getStock())
                     .addParameter("id", id)
                     .executeUpdate();
+            con.commit();
 
             ProductEntity updatedProduct = con.createQuery("SELECT * FROM products WHERE id = :id")
                     .addParameter("id", product.getId())
@@ -64,14 +70,17 @@ public class ProductRepository {
 
     }
 
-    public boolean delete(long id) {
+    public boolean delete(long id, int clientId) {
         String query = "UPDATE products SET deleted_at = :deletedAt WHERE id = :id AND deleted_at IS NULL";
-        try (Connection con = sql2o.open()) {
+        try (Connection con = sql2o.beginTransaction()) {
+            con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
+
             int rowsSoftDeleted = con.createQuery(query)
                     .addParameter("deletedAt", LocalDateTime.now())
                     .addParameter("id", id)
                     .executeUpdate()
                     .getResult();
+            con.commit();
             return rowsSoftDeleted > 0;
         }
 

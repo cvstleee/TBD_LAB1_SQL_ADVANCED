@@ -21,6 +21,8 @@ public class OrderDetailService {
     private OrderRepository orderRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private AuthService authService;
 
     public List<OrderDetailEntity> getOrderDetails() {
         return orderDetailRepository.findAll();
@@ -37,6 +39,7 @@ public class OrderDetailService {
 
     public OrderDetailEntity addOrderDetail(OrderDetailEntity orderDetail) {
         OrderEntity possibleOrder = orderRepository.findById(orderDetail.getOrder_id());
+        int authIdClient = authService.getAuthIdClient();
         if (possibleOrder == null) {
             throw new EntityNotFoundException("Order Not Found");
         }
@@ -45,24 +48,26 @@ public class OrderDetailService {
             throw new EntityNotFoundException("Product Not Found");
         }
 
-        return orderDetailRepository.save(orderDetail);
+        return orderDetailRepository.save(orderDetail, authIdClient);
     }
 
     public OrderDetailEntity updateOrderDetail(Long id, OrderDetailEntity orderDetail) {
         OrderDetailEntity possibleOrderDetail = orderDetailRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (possibleOrderDetail == null) {
             throw new EntityNotFoundException("Order Detail Not Found");
         }
 
-        return orderDetailRepository.update(id, orderDetail);
+        return orderDetailRepository.update(id, orderDetail, authIdClient);
     }
 
     public boolean deleteOrderDetail(Long id) {
         OrderDetailEntity orderDetail = orderDetailRepository.findById(id);
+        int authIdClient = authService.getAuthIdClient();
         if (orderDetail == null) {
             throw new EntityNotFoundException("Order Detail Not Found");
         }
 
-        return orderDetailRepository.delete(id);
+        return orderDetailRepository.delete(id, authIdClient);
     }
 }

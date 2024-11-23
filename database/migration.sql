@@ -57,9 +57,9 @@ CREATE TABLE order_details (
 
 CREATE TABLE logs (
     id SERIAL PRIMARY KEY,
-    idUser INT, 
+    client_id INT, 
     table_name VARCHAR(100),
-    idElement INT, 
+    element_id INT, 
     operation TEXT,
     description TEXT,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
