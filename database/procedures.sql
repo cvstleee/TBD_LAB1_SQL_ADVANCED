@@ -38,3 +38,40 @@ BEGIN
     WHERE products.category_id = category_id;
 END;
 $$;
+
+-- Reporte de operaciones realizadas por los clientes
+CREATE OR REPLACE FUNCTION get_user_operations_report()
+RETURNS TABLE (
+    client_name VARCHAR,
+    client_email VARCHAR,
+    total_inserts BIGINT,
+    total_updates BIGINT,
+    total_deletes BIGINT,
+    total_operations BIGINT,
+    description_operations TEXT[]
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.name AS client_name,
+        c.email AS client_email,
+        COUNT(CASE WHEN l.operation = 'INSERT' THEN 1 END) AS total_inserts,
+        COUNT(CASE WHEN l.operation = 'UPDATE' THEN 1 END) AS total_updates,
+        COUNT(CASE WHEN l.operation = 'DELETE' THEN 1 END) AS total_deletes,
+        COUNT(*) AS total_operations,
+        ARRAY_AGG(l.description) AS description_operations
+    FROM
+        logs l
+    INNER JOIN
+        clients c ON l.client_id = c.id
+    WHERE
+        c.deleted_at IS NULL
+    GROUP BY
+        c.name, c.email
+    ORDER BY
+        total_operations DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Uso del procedimiento
+-- SELECT * FROM get_user_operations_report();

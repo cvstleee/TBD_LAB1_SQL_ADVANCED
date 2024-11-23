@@ -16,7 +16,7 @@ BEGIN
     ELSIF TG_OP = 'UPDATE' THEN
         IF OLD.deleted_at IS NULL AND NEW.deleted_at IS NOT NULL THEN
             INSERT INTO logs (client_id, table_name, element_id, operation, description) 
-            VALUES (current_client_id, 'categories', NEW.id, 'SOFT', 'Soft Deleted Category: ' || OLD.name);
+            VALUES (current_client_id, 'categories', NEW.id, 'DELETE', 'Soft Deleted Category: ' || OLD.name);
         ELSE
             INSERT INTO logs (client_id, table_name, element_id, operation, description) 
             VALUES (current_client_id, 'categories', NEW.id, 'UPDATE', 'Change Name: ' || OLD.name || ' to ' || NEW.name);
@@ -49,7 +49,7 @@ BEGIN
 
     IF TG_OP = 'INSERT' THEN
         INSERT INTO logs (client_id, table_name, element_id, operation, description) 
-        VALUES (current_client_id, 'products', NEW.id, 'INSERT', 'New Product: ' || NEW.name);
+        VALUES (current_client_id, 'products', NEW.id, 'INSERT', 'New Product: ' || NEW.name || ' with price: ' || NEW.price || ' , stock: ' || NEW.stock || ' and state: ' || NEW.state);
 
     ELSIF TG_OP = 'UPDATE' THEN
         IF OLD.deleted_at IS NULL AND NEW.deleted_at IS NOT NULL THEN
@@ -57,7 +57,7 @@ BEGIN
             VALUES (current_client_id, 'products', NEW.id, 'DELETE', 'Soft Deleted Product: ' || OLD.name);
         ELSE
             INSERT INTO logs (client_id, table_name, element_id, operation, description) 
-            VALUES (current_client_id, 'products', NEW.id, 'UPDATE', 'Updated Product price: ' || OLD.price || ' to ' || NEW.price);
+            VALUES (current_client_id, 'products', NEW.id, 'UPDATE', 'Updated Product ' || New.name || ' price: ' || OLD.price || ' to ' || NEW.price || ' , stock: ' || OLD.stock || ' to ' || NEW.stock || ' and state: ' || OLD.state || ' to ' || NEW.state);
         END IF;
     END IF;
 
