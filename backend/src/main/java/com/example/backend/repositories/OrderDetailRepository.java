@@ -30,6 +30,15 @@ public class OrderDetailRepository {
         }
     }
 
+    public List<OrderDetailEntity> findByIdOrder(long order_id) {
+        try (Connection con = sql2o.open()) {
+            return con.createQuery("SELECT * FROM order_details WHERE order_id =:order_id AND deleted_at IS NULL")
+                    .addParameter("order_id", order_id)
+                    .executeAndFetch(OrderDetailEntity.class);
+        }
+    }
+
+
     public OrderDetailEntity save(OrderDetailEntity orderDetails, int clientId) {
         try (Connection con = sql2o.beginTransaction()) {
             con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();

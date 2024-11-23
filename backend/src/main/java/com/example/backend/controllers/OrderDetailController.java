@@ -29,6 +29,13 @@ public class OrderDetailController {
         return new ResponseEntity<>(orderDetailService.getOrderDetailById(id), HttpStatus.OK);
     }
 
+    // orderDetails for Order
+    @GetMapping("/order/{idOrder}")
+    public ResponseEntity<List<OrderDetailEntity>> getOrderDetailByIdOrder(@PathVariable Long idOrder) {
+        List<OrderDetailEntity> ordersDetails = orderDetailService.getOrderDetailsByIdOrder(idOrder);
+        return new ResponseEntity<>(ordersDetails, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<OrderDetailEntity> postOrderDetail(@RequestBody OrderDetailEntity orderDetails) {
         return new ResponseEntity<>(orderDetailService.addOrderDetail(orderDetails), HttpStatus.CREATED);

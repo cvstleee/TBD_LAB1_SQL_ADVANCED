@@ -37,6 +37,17 @@ public class OrderDetailService {
         return orderDetail;
     }
 
+    public List<OrderDetailEntity> getOrderDetailsByIdOrder(Long idOrder) {
+        OrderEntity orderEntity = orderRepository.findById(idOrder);
+        if (orderEntity == null) {
+            throw new EntityNotFoundException("Order Not Found");
+        }
+
+        return orderDetailRepository.findByIdOrder(idOrder);
+    }
+
+
+
     public OrderDetailEntity addOrderDetail(OrderDetailEntity orderDetail) {
         OrderEntity possibleOrder = orderRepository.findById(orderDetail.getOrder_id());
         int authIdClient = authService.getAuthIdClient();
