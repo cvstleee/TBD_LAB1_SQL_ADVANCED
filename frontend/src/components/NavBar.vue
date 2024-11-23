@@ -1,7 +1,7 @@
 <template>
   <VAppBar app color="#FF9800">
     <VBtn to="/">
-      <VToolbarTitle>Presta Banco: Créditos Hipotecarios</VToolbarTitle>
+      <VToolbarTitle>E- Commerce</VToolbarTitle>
     </VBtn>
     <VSpacer></VSpacer>
     <VBtn to="/registerUser" text>Register Customer</VBtn>

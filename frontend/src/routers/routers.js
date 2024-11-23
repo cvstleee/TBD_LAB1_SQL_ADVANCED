@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../components/Home.vue";
 import Register from "../components/registerUser.vue";
 import login from "../components/loginUser.vue";
-import mapa from "../components/MapComponent.vue";
+import order from "../components/order.vue";
 
 const routes = [
   {
-    path: "/home",
+    path: "/",
     name: "Home",
     component: Home,
   },
@@ -21,10 +21,11 @@ const routes = [
     component: login,
   },
   {
-    path: '/mapa-prueba',
-    name: 'mapa',
-    component: mapa,
-}
+    path: "/order",
+    name: "order",
+    component: order,
+  }
+  
 ];
 
 const router = createRouter({
