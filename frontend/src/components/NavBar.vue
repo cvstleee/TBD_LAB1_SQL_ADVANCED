@@ -1,19 +1,43 @@
 <template>
   <VAppBar app color="#FF9800">
-    <VBtn to="/">
+    <VBtn to="/home">
       <VToolbarTitle>Presta Banco: Créditos Hipotecarios</VToolbarTitle>
     </VBtn>
     <VSpacer></VSpacer>
-    <VBtn to="/registerUser" text>Register Customer</VBtn>
-    <VBtn to="/login" text>Login</VBtn>
-    <VBtn icon @click="toggleDrawer(true)">
-      <VIcon>mdi-menu</VIcon>
-    </VBtn>
+    <div class="login-button" v-if="!loginState">
+      <VBtn to="/registerUser" text>Register Customer</VBtn>
+      <VBtn to="/login" text>Login</VBtn>
+      <VBtn icon @click="toggleDrawer(true)">
+        <VIcon>mdi-menu</VIcon>
+      </VBtn>
+    </div>
+    <div class="logout-button" v-on:click="logout" v-else>
+      <VBtn to="/login" text>logout</VBtn>
+    </div>
   </VAppBar>
 </template>
 
 <script setup>
 import { VAppBar, VToolbarTitle, VSpacer, VBtn, VIcon } from '../Utils/vuetifyComponents';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+import { logoutUser } from '../services/clientService';
+
+const store = useStore();
+const loginState = computed(() => store.getters.getLogin);
+
+const logout = async () => {
+  const response = await logoutUser();
+
+  if (response.status === 200) {
+    alert("Usuario desconectado");
+    store.commit("logout");
+    store.commit("clearUser");
+  } else {
+    alert("Error al desconectar");
+  }
+}
+
 </script>
 
 <style scoped>
