@@ -40,7 +40,7 @@ END;
 $$;
 
 -- Reporte de operaciones realizadas por los clientes
-CREATE OR REPLACE FUNCTION get_user_operations_report()
+CREATE OR REPLACE FUNCTION get_client_operations_report()
 RETURNS TABLE (
     client_name VARCHAR,
     client_email VARCHAR,
@@ -74,4 +74,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Uso del procedimiento
--- SELECT * FROM get_user_operations_report();
+-- SELECT * FROM get_client_operations_report();

@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putProduct(@PathVariable Long id, @RequestBody ProductEntity product) {
+    public ResponseEntity<?> putProduct(@PathVariable int id, @RequestBody ProductEntity product) {
         try {
             return new ResponseEntity<>(productService.updateProduct(id, product), HttpStatus.OK);
         } catch (Exception e) {
