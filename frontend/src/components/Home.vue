@@ -45,7 +45,7 @@
                 style="width: 80px; margin-right: 5px;" 
               />
               <!-- Botón para agregar a orden -->
-              <button @click="sendProductId(product, product.quantity)" style="background-color: blue; color: white;">
+              <button @click="sendProductId(product, product.quantity)" style="background-color: burlywood; color: white;">
                 Agregar a orden de compra
               </button>
             </div>
