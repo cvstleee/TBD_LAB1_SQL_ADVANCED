@@ -22,7 +22,6 @@
           <th>Nombre</th>
           <th>Precio</th>
           <th>Stock</th>
-          <th>Estado</th>
           <th>Unidades a Pedir</th>
         </tr>
       </thead>
@@ -31,7 +30,6 @@
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td>{{ product.stock }}</td> 
-          <td>{{ product.state }}</td> 
           <td>
             <!-- Contenedor para el campo de entrada y el botón -->
             <div style="display: flex; align-items: center;">

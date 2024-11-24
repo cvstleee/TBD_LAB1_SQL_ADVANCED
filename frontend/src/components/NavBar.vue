@@ -5,8 +5,8 @@
     </VBtn>
     <VSpacer></VSpacer>
     <div class="login-button" v-if="!loginState">
-      <VBtn to="/registerUser" text>Register Costumer</VBtn>
-      <VBtn to="/login" text>Login</VBtn>
+      <VBtn to="/registerUser" text>Registrar usuario</VBtn>
+      <VBtn to="/login" text>Ingresar</VBtn>
       <VBtn icon @click="toggleDrawer(true)">
         <VIcon>mdi-menu</VIcon>
       </VBtn>
@@ -15,7 +15,7 @@
       <VBtn to="/logs" text>
         Bitacora
       </VBtn>
-      <VBtn v-on:click="logout" to="/login" text>logout</VBtn>
+      <VBtn v-on:click="logout" to="/login" text>Cerrar secion</VBtn>
     </div>
   </VAppBar>
 </template>
