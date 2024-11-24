@@ -23,13 +23,7 @@
         <input type="number" id="stock" name="stock" v-model.number="product.stock" class="input-field" />
       </div>
       
-      <div class="form-group">
-        <label for="state">Estado:</label>
-        <select id="state" v-model="product.state" class="input-field">
-          <option disabled value="">Seleccione el estado</option>
-          <option value="disponible">Disponible</option>
-        </select>
-      </div>
+    
 
       <div class="form-group">
         <label for="category">Categoría:</label>
@@ -58,7 +52,7 @@ const product = ref({
   description: '',
   price: 0,
   stock: 0,
-  state: '', 
+  state: 'available', 
   categoryId: null, 
 });
 
@@ -78,7 +72,7 @@ const registerProduct = async () => {
       description: '',
       price: 0,
       stock: 0,
-      state: '',
+      state: 'available',
       categoryId: null, 
     };
   } catch (error) {

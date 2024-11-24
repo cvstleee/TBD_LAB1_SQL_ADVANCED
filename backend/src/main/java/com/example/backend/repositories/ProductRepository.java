@@ -17,7 +17,7 @@ public class ProductRepository {
 
     public List<ProductEntity> findAll() {
         try (Connection con = sql2o.open()) {
-            return con.createQuery("SELECT * FROM products WHERE deleted_at IS NULL")
+            return con.createQuery("SELECT * FROM products WHERE deleted_at IS NULL and state='available'")
                     .executeAndFetch(ProductEntity.class);
         }
     }

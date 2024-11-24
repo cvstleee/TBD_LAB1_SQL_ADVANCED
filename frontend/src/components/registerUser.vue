@@ -11,7 +11,7 @@
                 <input type="text" id="address" v-model="userData.address" required />
             </div>
             <div>
-                <label for="email">Email:</label>
+                <label for="email">Correo:</label>
                 <input type="email" id="email" v-model="userData.email" required />
             </div>
             <div>
