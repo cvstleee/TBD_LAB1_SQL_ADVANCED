@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putProduct(@PathVariable Long id, @RequestBody ProductEntity product) {
+    public ResponseEntity<?> putProduct(@PathVariable int id, @RequestBody ProductEntity product) {
         try {
             return new ResponseEntity<>(productService.updateProduct(id, product), HttpStatus.OK);
         } catch (Exception e) {
@@ -47,5 +47,12 @@ public class ProductController {
         HashMap<String, Boolean> response = new HashMap<>();
         response.put("success", productService.deleteProduct(id));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/category/{categoryId}/{rate}")
+    public ResponseEntity<List<ProductEntity>> putProductsPriceWithRateByCategory(
+            @PathVariable int categoryId, @PathVariable double rate
+    ) {
+        return new ResponseEntity<>(productService.updateProductsPriceWithRateByCategory(rate, categoryId), HttpStatus.OK);
     }
 }

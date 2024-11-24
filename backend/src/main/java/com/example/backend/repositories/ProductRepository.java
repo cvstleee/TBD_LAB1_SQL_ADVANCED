@@ -51,23 +51,39 @@ public class ProductRepository {
         }
     }
 
-    public ProductEntity update(long id, ProductEntity product, int clientId) {
+    public ProductEntity update(int id, ProductEntity product, int clientId) {
         try (Connection con = sql2o.beginTransaction()) {
             con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
 
-            String query = "UPDATE products SET stock =:stock WHERE id = :id";
+            String query = """
+            CALL update_product(
+                CAST(:p_id AS INT),
+                CAST(:p_name AS VARCHAR),
+                CAST(:p_description AS TEXT),
+                CAST(:p_price AS DECIMAL),
+                CAST(:p_stock AS INT),
+                CAST(:p_state AS VARCHAR),
+                CAST(:p_deleted_at AS TIMESTAMP)
+            )
+        """;
             con.createQuery(query)
-                    .addParameter("stock", product.getStock())
-                    .addParameter("id", id)
+                    .addParameter("p_id", id)
+                    .addParameter("p_name", product.getName())
+                    .addParameter("p_description", product.getDescription())
+                    .addParameter("p_price", product.getPrice())
+                    .addParameter("p_stock", product.getStock())
+                    .addParameter("p_state", product.getState())
+                    .addParameter("p_deleted_at", product.getDeleted_at() != null ? product.getDeleted_at() : null)
                     .executeUpdate();
-            con.commit();
 
             ProductEntity updatedProduct = con.createQuery("SELECT * FROM products WHERE id = :id")
-                    .addParameter("id", product.getId())
+                    .addParameter("id", id)
                     .executeAndFetchFirst(ProductEntity.class);
+
+            con.commit();
+
             return updatedProduct;
         }
-
     }
 
     public boolean delete(long id, int clientId) {
@@ -83,6 +99,18 @@ public class ProductRepository {
             con.commit();
             return rowsSoftDeleted > 0;
         }
+    }
 
+    public List<ProductEntity> updateProductsPriceWithRateByCategory(double rate, int categoryId) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery("CALL update_products_prices_with_rate(CAST(:rate AS NUMERIC), CAST(:category_id AS INT))")
+                    .addParameter("rate", rate)
+                    .addParameter("category_id", categoryId)
+                    .executeUpdate();
+
+            return con.createQuery("SELECT * FROM products WHERE category_id = :category_id")
+                    .addParameter("category_id", categoryId)
+                    .executeAndFetch(ProductEntity.class);
+        }
     }
 }

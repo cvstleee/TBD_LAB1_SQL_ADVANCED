@@ -43,7 +43,7 @@ public class ProductService {
         return productRepository.save(product, authIdClient);
     }
 
-    public ProductEntity updateProduct(Long id, ProductEntity product) {
+    public ProductEntity updateProduct(int id, ProductEntity product) {
         ProductEntity possibleProduct = productRepository.findById(id);
         int authIdClient = authService.getAuthIdClient();
         if (possibleProduct == null) {
@@ -63,4 +63,12 @@ public class ProductService {
         return productRepository.delete(id, authIdClient);
     }
 
+    public List<ProductEntity> updateProductsPriceWithRateByCategory(double rate, int categoryId) {
+        CategoryEntity possibleCategory = categoryRepository.findById(categoryId);
+        if (possibleCategory == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
+        return productRepository.updateProductsPriceWithRateByCategory(rate, categoryId);
+    }
 }
