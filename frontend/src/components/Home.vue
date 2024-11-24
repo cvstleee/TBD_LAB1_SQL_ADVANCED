@@ -9,11 +9,18 @@
       </router-link>
     </div>
 
+    <div class="button-container" style="text-align: right;">
+      <router-link to="/order">
+        <button style="background-color: orange; color: white;">Ver Orden</button>
+      </router-link>
+    </div>
+
     <!-- Tabla para mostrar productos -->
     <table class="product-table">
       <thead>
         <tr>
           <th>Nombre</th>
+          <th>Precio</th>
           <th>Stock</th>
           <th>Estado</th>
           <th>Unidades a Pedir</th>
@@ -22,6 +29,7 @@
       <tbody>
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
           <td>{{ product.stock }}</td> 
           <td>{{ product.state }}</td> 
           <td>
@@ -37,7 +45,7 @@
                 style="width: 80px; margin-right: 5px;" 
               />
               <!-- Botón para agregar a orden -->
-              <button @click="sendProductId(product)" style="background-color: blue; color: white;">
+              <button @click="sendProductId(product, product.quantity)" style="background-color: blue; color: white;">
                 Agregar a orden de compra
               </button>
             </div>
@@ -52,34 +60,62 @@
 import { ref, onMounted } from 'vue';
 import productService from '../services/productService';
 import { orderService } from '../services/orderService';
+import { useStore } from 'vuex';
 
 // Definir la lista de productos
 const products = ref([]); 
+const store = useStore();
+
 
 onMounted(async () => {
   try {
     const responseProducts = await productService.getProducts();
-    products.value = responseProducts; 
+    products.value = responseProducts;
   } catch (error) {
     console.error(error.message);
   }
 });
 
-const sendProductId = async (product) => {
+const sendProductId = async (product, cantidad) => {
+  
   const newOrderDetails = {
-    order_id: 4,
+    order_id: store.getters.getOrderId,
     product_id: product.id,
-    quantity: 1,
+    quantity: cantidad,
     unit_price: product.price,
   };
 
   try {
     const response = await orderService.postOrderDetails(newOrderDetails);
-    console.log(response);
+
+    actualizarTotal(newOrderDetails);
+    actualziarStock(product, cantidad);
   } catch (error) {
     console.error(error.message);
   }
+
 }
+
+const actualizarTotal = async (newOrderDetails) => {
+  const orderID = store.getters.getOrderId;
+  const response_order = await orderService.gerOrderById(orderID); 
+
+  response_order.total = response_order.total + (newOrderDetails.quantity * newOrderDetails.unit_price);
+
+  
+  console.log('Response: antes de put', response_order);
+  const response = await orderService.putOrder(response_order);
+  console.log('Response: despues de put', response);
+}
+
+
+const actualziarStock = async (product, cantidad) => {
+  product.stock = product.stock - cantidad;
+  const response = await productService.putProduct(product);
+  console.log('Response:', response);
+}
+
+
 </script>
 
 <style scoped>
