@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +16,6 @@ public class OrderEntity {
     private String state;
     private int client_id;
     private double total;
+    private Date shipping_date;
     private Timestamp deleted_at;
 }

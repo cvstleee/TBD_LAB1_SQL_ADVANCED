@@ -87,7 +87,7 @@ BEGIN
 
     IF TG_OP = 'INSERT' THEN
         INSERT INTO logs (client_id, table_name, element_id, operation, description) 
-        VALUES (current_client_id, 'orders', NEW.id, 'INSERT', 'New Order with total: ' || NEW.total);
+        VALUES (current_client_id, 'orders', NEW.id, 'INSERT', 'New Order with total: ' || NEW.total || ' and state: ' || NEW.state);
 
     ELSIF TG_OP = 'UPDATE' THEN
         IF OLD.deleted_at IS NULL AND NEW.deleted_at IS NOT NULL THEN
@@ -95,7 +95,7 @@ BEGIN
             VALUES (current_client_id, 'orders', NEW.id, 'DELETE', 'Soft Deleted Order with total: ' || OLD.total);
         ELSE
             INSERT INTO logs (client_id, table_name, element_id, operation, description) 
-            VALUES (current_client_id, 'orders', NEW.id, 'UPDATE', 'Updated Order with total change from ' || OLD.total || ' to ' || NEW.total);
+            VALUES (current_client_id, 'orders', NEW.id, 'UPDATE', 'Updated Order with total change from ' || OLD.total || ' to ' || NEW.total || ' and state: ' || OLD.state || ' to ' || NEW.state);
         END IF;
     END IF;
 

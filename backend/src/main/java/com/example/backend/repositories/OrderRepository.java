@@ -37,13 +37,14 @@ public class OrderRepository {
         try (Connection con = sql2o.beginTransaction()) {
             con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
 
-            String query = "INSERT INTO orders (order_date, state, client_id, total) " +
-            "VALUES (:order_date, :state, :client_id, :total) RETURNING id";
+            String query = "INSERT INTO orders (order_date, state, client_id, total, shipping_date) " +
+            "VALUES (:order_date, :state, :client_id, :total, :shipping_date) RETURNING id";
             int id = con.createQuery(query, true)
                     .addParameter("order_date", order.getOrder_date())
                     .addParameter("state", order.getState())
                     .addParameter("client_id", order.getClient_id())
                     .addParameter("total", order.getTotal())
+                    .addParameter("shipping_date", order.getShipping_date())
                     .executeUpdate()
                     .getKey(Integer.class);
             con.commit();
@@ -56,9 +57,10 @@ public class OrderRepository {
         try (Connection con = sql2o.beginTransaction()) {
             con.createQuery("SET LOCAL application.client_id = " + clientId).executeUpdate();
 
-            String query = "UPDATE orders SET state = :state WHERE id = :id";
+            String query = "UPDATE orders SET state = :state, total = :total WHERE id = :id";
             con.createQuery(query)
                     .addParameter("state", order.getState())
+                    .addParameter("total", order.getTotal())
                     .addParameter("id", id)
                     .executeUpdate();
             con.commit();
