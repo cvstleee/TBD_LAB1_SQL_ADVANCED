@@ -1,5 +1,6 @@
 package com.example.backend.services;
 
+import com.example.backend.dtos.QueryDTO;
 import com.example.backend.entities.ClientEntity;
 import com.example.backend.entities.OrderEntity;
 import com.example.backend.exceptions.EntityNotFoundException;
@@ -61,5 +62,9 @@ public class OrderService {
         }
 
         return orderRepository.delete(id, authIdClient);
+    }
+
+    public List<QueryDTO> getAverageShippingTimes() {
+        return orderRepository.getAverageShippingTimes();
     }
 }

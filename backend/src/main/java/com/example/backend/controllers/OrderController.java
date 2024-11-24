@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dtos.QueryDTO;
 import com.example.backend.entities.OrderEntity;
 import com.example.backend.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,10 @@ public class OrderController {
         HashMap<String, Boolean> response = new HashMap<>();
         response.put("success", orderService.deletedOrder(id));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/query")
+    public ResponseEntity<List<QueryDTO>> getAverageShippingTimesOrders () {
+        return new ResponseEntity<>(orderService.getAverageShippingTimes(), HttpStatus.OK);
     }
 }

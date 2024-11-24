@@ -1,5 +1,6 @@
 package com.example.backend.repositories;
 
+import com.example.backend.dtos.QueryDTO;
 import com.example.backend.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -85,4 +86,31 @@ public class OrderRepository {
             return rowsUpdated > 0;
         }
     }
+
+    public List<QueryDTO> getAverageShippingTimes() {
+        String query = "SELECT \n" +
+                "    c.name AS category_name,\n" +
+                "    AVG(EXTRACT(EPOCH FROM (o.shipping_date - o.order_date)) / 3600) AS average_shipping_time_hours\n" +
+                "FROM \n" +
+                "    orders o\n" +
+                "JOIN \n" +
+                "    order_details od ON od.order_id = o.id\n" +
+                "JOIN \n" +
+                "    products p ON p.id = od.product_id\n" +
+                "JOIN \n" +
+                "    categories c ON p.category_id = c.id\n" +
+                "WHERE \n" +
+                "    o.order_date >= DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '3 months') \n" +
+                "    AND o.order_date < DATE_TRUNC('quarter', CURRENT_DATE)\n" +
+                "    AND o.shipping_date IS NOT NULL\n" +
+                "GROUP BY \n" +
+                "    c.name\n" +
+                "ORDER BY \n" +
+                "    average_shipping_time_hours DESC;";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(query)
+                    .executeAndFetch(QueryDTO.class);
+        }
+    }
+
 }
