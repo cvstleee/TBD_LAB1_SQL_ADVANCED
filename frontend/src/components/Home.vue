@@ -85,6 +85,12 @@ const sendProductId = async (product, cantidad) => {
     unit_price: product.price,
   };
 
+  
+  if(cantidad > product.stock){
+    alert('No hay suficiente stock');
+    return;
+  }
+
   try {
     const response = await orderService.postOrderDetails(newOrderDetails);
 
