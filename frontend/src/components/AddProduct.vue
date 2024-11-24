@@ -25,7 +25,10 @@
       
       <div class="form-group">
         <label for="state">Estado:</label>
-        <input type="text" id="state" name="state" v-model="product.state" class="input-field" />
+        <select id="state" v-model="product.state" class="input-field">
+          <option disabled value="">Seleccione el estado</option>
+          <option value="disponible">Disponible</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -55,7 +58,7 @@ const product = ref({
   description: '',
   price: 0,
   stock: 0,
-  state: '',
+  state: '', 
   categoryId: null, 
 });
 
@@ -65,7 +68,8 @@ const categories = ref([]);
 // Función para registrar un nuevo producto
 const registerProduct = async () => {
   try {
-    const response = await productService.postProduct(product.value);
+    // Enviar tanto el producto como la ID de la categoría
+    const response = await productService.postProduct(product.value, product.value.categoryId);
     console.log(response);
     
     // Resetear el formulario
@@ -114,12 +118,10 @@ onMounted(async () => {
   padding: 10px; 
   border: 1px solid #ccc; 
   border-radius: 5px; 
-  transition: border-color 0.3s;
 }
 
 .input-field:focus {
   border-color: #007bff; 
-  outline: none; 
 }
 
 button {
@@ -128,10 +130,6 @@ button {
   color: white; 
   border: none;
   border-radius: 5px;
-  cursor: pointer; 
-  width: auto; 
-  max-width: 150px; 
-  margin: auto; 
 }
 
 button:hover {
