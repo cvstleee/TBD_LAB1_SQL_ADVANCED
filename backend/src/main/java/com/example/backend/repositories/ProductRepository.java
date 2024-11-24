@@ -99,6 +99,18 @@ public class ProductRepository {
             con.commit();
             return rowsSoftDeleted > 0;
         }
+    }
 
+    public List<ProductEntity> updateProductsPriceWithRateByCategory(double rate, int categoryId) {
+        try (Connection con = sql2o.open()) {
+            con.createQuery("CALL update_products_prices_with_rate(CAST(:rate AS NUMERIC), CAST(:category_id AS INT))")
+                    .addParameter("rate", rate)
+                    .addParameter("category_id", categoryId)
+                    .executeUpdate();
+
+            return con.createQuery("SELECT * FROM products WHERE category_id = :category_id")
+                    .addParameter("category_id", categoryId)
+                    .executeAndFetch(ProductEntity.class);
+        }
     }
 }

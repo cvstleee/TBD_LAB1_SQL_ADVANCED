@@ -48,4 +48,11 @@ public class ProductController {
         response.put("success", productService.deleteProduct(id));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PutMapping("/category/{categoryId}/{rate}")
+    public ResponseEntity<List<ProductEntity>> putProductsPriceWithRateByCategory(
+            @PathVariable int categoryId, @PathVariable double rate
+    ) {
+        return new ResponseEntity<>(productService.updateProductsPriceWithRateByCategory(rate, categoryId), HttpStatus.OK);
+    }
 }
