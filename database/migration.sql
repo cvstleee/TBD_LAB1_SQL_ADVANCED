@@ -39,7 +39,7 @@ CREATE TABLE orders (
     state VARCHAR(50) NOT NULL,
     client_id SERIAL NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
-    shipping_date Date NOT NULL,
+    shipping_date timestamp without time zone,
     deleted_at TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
