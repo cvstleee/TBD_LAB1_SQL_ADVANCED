@@ -4,6 +4,7 @@ import Register from "../components/registerUser.vue";
 import login from "../components/loginUser.vue";
 import order from "../components/order.vue";
 import AddProduct from "../components/AddProduct.vue";
+import logs from "../components/logs.vue";
 
 const routes = [
   {
@@ -30,8 +31,12 @@ const routes = [
     path: "/addProduct",
     name: "AddProduct",
     component: AddProduct,
-  }
-  
+  },
+  {
+    path: "/logs",
+    name: "logs",
+    component: logs,
+  },
 ];
 
 const router = createRouter({

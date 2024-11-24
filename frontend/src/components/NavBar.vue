@@ -11,8 +11,11 @@
         <VIcon>mdi-menu</VIcon>
       </VBtn>
     </div>
-    <div class="logout-button" v-on:click="logout" v-else>
-      <VBtn to="/login" text>logout</VBtn>
+    <div class="logout-button" v-else>
+      <VBtn to="/logs" text>
+        Bitacora
+      </VBtn>
+      <VBtn v-on:click="logout" to="/login" text>logout</VBtn>
     </div>
   </VAppBar>
 </template>
