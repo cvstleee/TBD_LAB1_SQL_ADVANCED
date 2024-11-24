@@ -11,9 +11,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class LogDTO {
     private Long id;
-    private Integer userId;
-    private String tableName;
-    private Long elementId;
+    private Integer client_id;
+    private String table_name;
+    private Long element_id;
     private String operation;
     private String description;
     private Date date;

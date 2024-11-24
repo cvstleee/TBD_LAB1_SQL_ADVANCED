@@ -10,9 +10,9 @@
 
         <!-- Lista de logs -->
         <div v-if="!loading && !error" v-for="log in logs" :key="log.id" class="log-item">
-            <p><strong>Client ID:</strong> {{ log.userId }}</p>
-            <p><strong>Table Name:</strong> {{ log.tableName }}</p>
-            <p><strong>Element ID:</strong> {{ log.elementId }}</p>
+            <p><strong>Client ID:</strong> {{ log.client_id }}</p>
+            <p><strong>Table Name:</strong> {{ log.table_name }}</p>
+            <p><strong>Element ID:</strong> {{ log.element_id }}</p>
             <p><strong>Operation:</strong> {{ log.operation }}</p>
             <p><strong>Description:</strong> {{ log.description }}</p>
         </div>
