@@ -6,7 +6,7 @@
           <tr>
             <th>Nombre del Producto</th>
             <th>Cantidad</th>
-            <th>Precio</th>
+            <th>Precio unitario</th>
           </tr>
         </thead>
         <tbody>
@@ -36,21 +36,24 @@
   import axios from 'axios';
   import productService from '../services/productService';
   import { orderService } from '../services/orderService';
+  import { useStore } from 'vuex';
   
   const products = ref([]);
   const loading = ref(true);
   const errorMessage = ref('');
   const total = ref(0);
+  const store = useStore();
   
   const obtenerOrder = async () => {
   try {
+    const orderID = store.getters.getOrderId;
 
-    const response_order = await orderService.gerOrderById(4);
-    
+    const response_order = await orderService.gerOrderById(orderID); 
 
     total.value = response_order.total;
 
-    const response = await orderService.getProductOrdersById(4); // Ajusta según tu API
+    
+    const response = await orderService.getProductOrdersById(orderID); // Ajusta según tu API
     
     const orderData = response; // Asumiendo que response.data contiene la orden
 

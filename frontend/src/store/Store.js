@@ -24,6 +24,12 @@ export default createStore({
     logout(state) {
       state.login = false;
     },
+    setOrderId(state, orderId) {
+      state.orderId = orderId;
+    },
+    setUserId(state, userId) {
+      state.userId = userId;
+    },
   },
   actions: {
     setUser({ commit }, user) {
@@ -38,10 +44,18 @@ export default createStore({
     logout({ commit }) {
       commit("logout");
     },
+    setOrderId({ commit }, orderId) {
+      commit("setOrderId", orderId);
+    },
+    setUserId({ commit }, userId) {
+      commit("setUserId", userId);
+  },
   },
   getters: {
     getUser: (state) => state.user,
     getLogin: (state) => state.login,
+    getOrderId: (state) => state.orderId,
+    getUserId: (state) => state.userId,
   },
   plugins: [vuexPersist.plugin],
 });
