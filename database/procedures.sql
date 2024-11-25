@@ -1,3 +1,5 @@
+\c "e-commerce-db"
+
 CREATE OR REPLACE PROCEDURE update_product(
     p_id INT,
     p_name VARCHAR(255),

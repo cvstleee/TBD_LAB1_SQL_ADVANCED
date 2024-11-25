@@ -1,3 +1,5 @@
+\c "e-commerce-db"
+
 CREATE OR REPLACE FUNCTION log_categories()
 RETURNS TRIGGER AS 
 $$

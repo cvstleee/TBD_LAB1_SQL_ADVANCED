@@ -1,3 +1,8 @@
+-- Creación de la base de datos
+CREATE DATABASE "e-commerce-db";
+
+\c "e-commerce-db"
+
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS clients CASCADE;

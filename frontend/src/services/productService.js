@@ -1,6 +1,6 @@
 // src/services/productService.js
 
-import httpClient from "../Utils/http-common"; // Cambia esta URL según tu configuración
+import httpClient from "../Utils/http-common"; 
 
 const productService = {
   async getProducts() {
