@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Productos</h1>
-    
+
     <!-- Botones para agregar producto -->
     <div class="button-container">
       <router-link to="/addProduct">
@@ -29,21 +29,17 @@
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
-          <td>{{ product.stock }}</td> 
+          <td>{{ product.stock }}</td>
           <td>
             <!-- Contenedor para el campo de entrada y el botón -->
             <div style="display: flex; align-items: center;">
               <!-- Campo de entrada para unidades -->
-              <input 
-                type="number" 
-                v-model.number="product.quantity" 
-                min="1" 
-                max="product.stock" 
-                placeholder="Cantidad" 
-                style="width: 80px; margin-right: 5px;" 
-              />
+              <input type="number" v-model.number="product.quantity" min="0" :max="product.stock"
+                style="width: 80px; margin-right: 5px;" />
               <!-- Botón para agregar a orden -->
-              <button @click="sendProductId(product, product.quantity)" style="background-color: burlywood; color: white;">
+              <button @click="sendProductId(product, product.quantity)"
+                :disabled="!isValidQuantity(product.quantity, product.stock)"
+                style="background-color: burlywood; color: white;">
                 Agregar a orden de compra
               </button>
             </div>
@@ -61,21 +57,30 @@ import { orderService } from '../services/orderService';
 import { useStore } from 'vuex';
 
 // Definir la lista de productos
-const products = ref([]); 
+const products = ref([]);
 const store = useStore();
-
 
 onMounted(async () => {
   try {
     const responseProducts = await productService.getProducts();
-    products.value = responseProducts;
+    // Inicializar el campo quantity en 0 para cada producto
+    products.value = responseProducts.map((product) => ({
+      ...product,
+      quantity: 0,
+    }));
   } catch (error) {
     console.error(error.message);
   }
 });
 
+// Validar si la cantidad ingresada es válida
+const isValidQuantity = (quantity, stock) => {
+  return quantity > 0 && quantity <= stock;
+};
+
 const sendProductId = async (product, cantidad) => {
-  
+  cantidad = parseInt(cantidad);
+
   const newOrderDetails = {
     order_id: store.getters.getOrderId,
     product_id: product.id,
@@ -83,8 +88,7 @@ const sendProductId = async (product, cantidad) => {
     unit_price: product.price,
   };
 
-  
-  if(cantidad > product.stock){
+  if (cantidad > product.stock) {
     alert('No hay suficiente stock');
     return;
   }
@@ -93,55 +97,53 @@ const sendProductId = async (product, cantidad) => {
     const response = await orderService.postOrderDetails(newOrderDetails);
 
     actualizarTotal(newOrderDetails);
-    actualziarStock(product, cantidad);
+    actualizarStock(product, cantidad);
   } catch (error) {
     console.error(error.message);
   }
-
-}
+};
 
 const actualizarTotal = async (newOrderDetails) => {
   const orderID = store.getters.getOrderId;
-  const response_order = await orderService.gerOrderById(orderID); 
+  const response_order = await orderService.gerOrderById(orderID);
 
-  response_order.total = response_order.total + (newOrderDetails.quantity * newOrderDetails.unit_price);
+  response_order.total =
+    response_order.total + newOrderDetails.quantity * newOrderDetails.unit_price;
 
-  
   console.log('Response: antes de put', response_order);
   const response = await orderService.putOrder(response_order);
   console.log('Response: despues de put', response);
-}
+};
 
-
-const actualziarStock = async (product, cantidad) => {
+const actualizarStock = async (product, cantidad) => {
   product.stock = product.stock - cantidad;
   const response = await productService.putProduct(product);
   console.log('Response:', response);
-}
-
-
+};
 </script>
 
 <style scoped>
 .button-container {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
-.form-title{
+.form-title {
   margin-top: 20px;
 }
+
 .product-table {
-  width: 100%; 
-  border-collapse: collapse; 
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.product-table th, .product-table td {
-  border: 1px solid #ccc; 
-  padding: 10px; 
-  text-align: left; 
+.product-table th,
+.product-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
 }
 
 .product-table th {
-  background-color: #f2f2f2; 
+  background-color: #f2f2f2;
 }
 </style>
