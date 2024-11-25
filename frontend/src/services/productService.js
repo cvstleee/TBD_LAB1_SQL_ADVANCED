@@ -25,7 +25,7 @@ const productService = {
     }
   },
 
-  async postProduct(product,id) {
+  async postProduct(product, id) {
     try {
       const response = await httpClient.post(`/api/v1/products/${id}`, product);
       return response.data;
@@ -36,19 +36,19 @@ const productService = {
     }
   },
 
-
   async putProduct(product) {
     try {
-      const response = await httpClient.put(`/api/v1/products/${product.id}`, product);
+      const response = await httpClient.put(
+        `/api/v1/products/${product.id}`,
+        product
+      );
       return response.data;
     } catch (error) {
       throw new Error(
         error.response ? error.response.data : "Error al actualizar producto"
       );
     }
-  }
-
-  
+  },
 
   //   async putProduct(id, product) {
   //     try {
