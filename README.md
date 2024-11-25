@@ -67,8 +67,7 @@ Asegúrese de tener instalados Postgres 16, JDK 17, Node.js e IntelliJ IDEA. Se 
         - Host: Dirección IP del servidor.
         - Puerto: Puerto configurado para el servidor.
         - Base de datos: Nombre de la base de datos principal, generalmente se llama postgres.
-4. Repetir el paso 3 para los scripts procedures.sql y triggers.sql
-          
+4. Repetir el paso 3 para los scripts procedures.sql, triggers.sql y dump-data.sql
 5. Abrir IntelliJ IDEA y seleccionar la opción "Abrir proyecto". Buscar la dirección del repositorio y seleccionar la carpeta backend.
 6. Buscar el archivo BackendApplication.java e iniciarlo.
 7. Abrir una terminal en la carpeta frontend y ejecutar los siguientes comandos:
