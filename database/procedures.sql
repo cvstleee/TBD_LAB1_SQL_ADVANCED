@@ -40,38 +40,33 @@ END;
 $$;
 
 -- Reporte de operaciones realizadas por los clientes
-CREATE OR REPLACE FUNCTION get_user_operations_report()
+CREATE OR REPLACE FUNCTION get_client_operations_report()
 RETURNS TABLE (
-    client_name VARCHAR,
-    client_email VARCHAR,
-    total_inserts BIGINT,
-    total_updates BIGINT,
-    total_deletes BIGINT,
-    total_operations BIGINT,
-    description_operations TEXT[]
+    id INTEGER,
+    client_id INTEGER,
+    table_name VARCHAR,
+    element_id INTEGER,
+    operation TEXT,
+    description TEXT,
+    date TIMESTAMP
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        c.name AS client_name,
-        c.email AS client_email,
-        COUNT(CASE WHEN l.operation = 'INSERT' THEN 1 END) AS total_inserts,
-        COUNT(CASE WHEN l.operation = 'UPDATE' THEN 1 END) AS total_updates,
-        COUNT(CASE WHEN l.operation = 'DELETE' THEN 1 END) AS total_deletes,
-        COUNT(*) AS total_operations,
-        ARRAY_AGG(l.description) AS description_operations
+        l.id AS id,                     
+        l.client_id AS client_id,              
+        l.table_name AS table_name,     
+        l.element_id AS element_id,     
+        l.operation AS operation,       
+        l.description AS description,   
+        l.date AS date                 
     FROM
-        logs l
-    INNER JOIN
-        clients c ON l.client_id = c.id
-    WHERE
-        c.deleted_at IS NULL
-    GROUP BY
-        c.name, c.email
+        logs AS l        
     ORDER BY
-        total_operations DESC;
+        l.date DESC;                   
 END;
-$$ LANGUAGE plpgsql;
+$$
+ LANGUAGE plpgsql;
 
 -- Uso del procedimiento
 -- SELECT * FROM get_user_operations_report();
