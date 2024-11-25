@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     @Autowired
     private ClientRepository clientRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public ClientEntity register(RegisterDTO clientDTO) {
         ClientEntity existingClientEntityByEmail = clientRepository.findByEmail(clientDTO.getEmail());
@@ -34,7 +32,7 @@ public class AuthService {
                 .name(clientDTO.getName())
                 .address(clientDTO.getAddress())
                 .email(clientDTO.getEmail())
-                .password(passwordEncoder.encode(clientDTO.getPassword()))
+                .password(clientDTO.getPassword())
                 .phone(clientDTO.getPhone())
                 .build();
 
@@ -46,7 +44,7 @@ public class AuthService {
         if (clientEntity == null) {
             throw new IllegalStateException("The email or password is incorrect");
         }
-        if (!passwordEncoder.matches(loginDTO.getPassword(), clientEntity.getPassword())) {
+        if (!clientEntity.getPassword().equals(loginDTO.getPassword())) {
             throw new IllegalStateException("The email or password is incorrect");
         }
 
