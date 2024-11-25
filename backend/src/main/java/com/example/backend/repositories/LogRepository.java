@@ -18,7 +18,7 @@ public class LogRepository {
     }
 
     public List<LogDTO> findAllLogs() {
-        String query = "SELECT * FROM logs";
+        String query = "SELECT * FROM get_client_operations_report()";
 
         try (Connection connection = sql2o.open()) {
             return connection.createQuery(query).executeAndFetch(LogDTO.class);
