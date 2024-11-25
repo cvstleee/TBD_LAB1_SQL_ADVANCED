@@ -29,19 +29,18 @@ END;
 $$;
 
 -- Actualizar precios de los productos de una categoria en base a un porcentaje de incremento
-CREATE OR REPLACE PROCEDURE update_products_prices_with_rate(rate NUMERIC, category_id_param INT)
+CREATE OR REPLACE PROCEDURE update_products_prices_with_rate(rate NUMERIC, category_id INT)
 LANGUAGE plpgsql
 AS $$
 BEGIN
     UPDATE products
     SET price = price * (1 + (rate / 100))
-    WHERE products.category_id = category_id_param;
+    WHERE products.category_id = category_id;
 END;
-$$
-;
+$$;
 
 -- Reporte de operaciones realizadas por los clientes
-CREATE OR REPLACE FUNCTION get_client_operations_report()
+CREATE OR REPLACE FUNCTION get_user_operations_report()
 RETURNS TABLE (
     client_name VARCHAR,
     client_email VARCHAR,
@@ -75,4 +74,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Uso del procedimiento
--- SELECT * FROM get_client_operations_report();
+-- SELECT * FROM get_user_operations_report();
