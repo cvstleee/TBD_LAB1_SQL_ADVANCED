@@ -49,7 +49,7 @@ Asegúrese de tener instalados Postgres 16, JDK 17, Node.js e IntelliJ IDEA. Se 
       ```
     - Abrir una terminal en esa ruta y ejecutar el siguiente comando:
       ```sh
-      psql -U <Usuario> -h <Host> -p <Puerto> -f "<ruta hacia el repositorio>/TBD_Grupo3_Lab1/database/migration.sql"
+      psql -U postgres -h localhost -p 5432 -f "<ruta hacia el repositorio>/TBD_Grupo3_Lab1/database/migration.sql"
       ```
       Donde:
         - Usuario: Nombre del usuario administrador de PostgreSQL.
